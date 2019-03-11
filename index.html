@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Curie</title>
+    <link
+      rel="stylesheet"
+      media="all"
+      href="https://necolas.github.io/normalize.css/8.0.1/normalize.css"
+    />
+    <link rel="stylesheet" media="all" href="css/index.css" />
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel" data-presets="react">
+      function App() {
+        return (
+          <div>
+            <h1>This is a very simple app!</h1>
+          </div>
+        );
+      }
+
+      ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
+  </body>
+</html>
