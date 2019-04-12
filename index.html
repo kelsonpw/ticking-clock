@@ -23,10 +23,15 @@
 
         return (
           <div className="Clock__container">
-            <div className="Clock__center" />
-            <div className="Clock__seconds" />
-            <div className="Clock__minutes" />
-            <div className="Clock__hours" />
+            <div className="Clock__hand">
+              <div className="Clock__hand__hours" />
+            </div>
+            <div className="Clock__hand">
+              <div className="Clock__hand__seconds" />
+            </div>
+            <div className="Clock__hand">
+              <div className="Clock__hand__minutes" />
+            </div>
           </div>
         );
       };

@@ -1,7 +1,22 @@
-body {
-  background-color: #f4f4f4;
-  color: #595959;
-  font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
-  margin: 0;
-  padding: 0;
+.Clock__container {
+  border-radius: 50%;
+  background: #fff url(../assets/clockFace.svg) no-repeat center;
+  background-size: 88%;
+  height: 20em;
+  padding-bottom: 31%;
+  position: relative;
+  width: 20em;
+}
+
+.Clock__container:after {
+  background: #000;
+  border-radius: 50%;
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 1em;
+  height: 1em;
+  z-index: 10;
 }
