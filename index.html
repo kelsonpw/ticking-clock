@@ -16,13 +16,33 @@
   <body>
     <div id="app"></div>
     <script type="text/babel" data-presets="react">
-      function App() {
-        return (
-          <div>
-            <h1>This is a very simple app!</h1>
-            <i>perhaps too simple....</i>
-          </div>
-        );
+      const Clock = ({ value }) => <p>{value.toLocaleDateString()}</p>;
+
+      class App extends React.Component {
+        state = {
+          date: new Date(),
+        };
+
+        componentDidMount() {
+          this.interval = setInterval(() => {
+            const date = new Date();
+            this.setState({ date });
+          }, 1000);
+        }
+
+        componentWillUnmount() {
+          clearInterval(this.interval);
+        }
+
+        render() {
+          const { date } = this.state;
+          return (
+            <div>
+              <h1>Clock!</h1>
+              <Clock value={date} />
+            </div>
+          );
+        }
       }
 
       ReactDOM.render(<App />, document.getElementById('app'));
