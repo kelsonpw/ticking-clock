@@ -9,6 +9,11 @@
       href="https://necolas.github.io/normalize.css/8.0.1/normalize.css"
     />
     <link rel="stylesheet" media="all" href="css/index.css" />
+    <link
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      media="all"
+      rel="stylesheet"
+    />
     <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
@@ -18,64 +23,84 @@
     <script type="text/babel" data-presets="react">
       class AlarmControl extends React.Component {
         state = {
-          hours: 0,
-          minutes: 0,
+          hour: 0,
+          minute: 0,
         };
 
         onChangeHour = inc => {
-          this.setState(({ hours }) => {
-            const result = (hours + inc) % 24;
+          this.setState(({ hour }) => {
+            const result = (24 + (hour + inc)) % 24;
             return {
-              hours: Math.max(result, 0),
+              hour: Math.max(result, 0),
             };
           });
         };
 
-        onChangeMinutes = inc => {
-          this.setState(({ minutes }) => {
-            const result = (minutes + inc) % 60;
+        onChangeMinute = inc => {
+          this.setState(({ minute }) => {
+            const result = (60 + (minute + inc)) % 60;
             return {
-              minutes: Math.max(result, 0),
+              minute: Math.max(result, 0),
             };
           });
         };
+
+        renderHour() {
+          const { hour } = this.state;
+          const relativeHour = hour % 12;
+          const hourVal = `${relativeHour === 0 ? 12 : relativeHour}:`;
+          return (
+            <div className="AlarmControl__hours">
+              <button
+                className="AlarmControl__hours__up"
+                onClick={() => this.onChangeHour(1)}>
+                up
+              </button>
+              <div className="AlarmControl__hours__val">{hourVal}</div>
+              <button
+                className="AlarmControl__hours__down"
+                onClick={() => this.onChangeHour(-1)}>
+                down
+              </button>
+            </div>
+          );
+        }
+
+        renderMinute() {
+          const { minute } = this.state;
+          const minuteVal = `${minute < 10 ? '0' : ''}${minute}`;
+          return (
+            <div className="AlarmControl__minutes">
+              <button
+                className="AlarmControl__minutes__up"
+                onClick={() => this.onChangeMinute(1)}>
+                up
+              </button>
+              <div className="AlarmControl__minutes__val">{minuteVal}</div>
+              <button
+                className="AlarmControl__hours__down"
+                onClick={() => this.onChangeMinute(-1)}>
+                down
+              </button>
+            </div>
+          );
+        }
 
         render() {
-          const { hours, minutes } = this.state;
+          const { hour } = this.state;
           return (
             <div className="AlarmControl">
-              <div className="AlarmControl__hours">
-                <div
-                  className="AlarmControl__hours__up"
-                  onClick={() => this.onChangeHour(1)}>
-                  {'<'}
-                </div>
-                <div className="AlarmControl__hours__val">{hours}</div>
-                <div
-                  className="AlarmControl__hours__down"
-                  onClick={() => this.onChangeHour(-1)}>
-                  {'>'}
-                </div>
-              </div>
-              <div className="AlarmControl__minutes">
-                <div
-                  className="AlarmControl__minutes__up"
-                  onClick={() => this.onChangeHour(1)}>
-                  {'<'}
-                </div>
-                <div className="AlarmControl__minutes__val">{hours}</div>
-                <div
-                  className="AlarmControl__hours__down"
-                  onClick={() => this.onChangeHour(-1)}>
-                  {'>'}
-                </div>
-              </div>
+              {this.renderHour()}
+              {this.renderMinute()}
+              {hour > 11 ? 'PM' : 'AM'}
             </div>
           );
         }
       }
 
       const [SEC, MIN, HR] = [60, 60, 12];
+
+      const sweepWait = val => (val === 59 ? 58.5 : val);
 
       const rotateHand = (val, unit) => ({
         transform: `rotate(${(val / unit) * 360}deg)`,
@@ -84,7 +109,10 @@
       const Clock = ({ seconds, minutes, hours }) => (
         <div className="Clock__container">
           <div className="Clock">
-            <div className="Clock__seconds" style={rotateHand(seconds, SEC)} />
+            <div
+              className="Clock__seconds"
+              style={rotateHand(sweepWait(seconds), SEC)}
+            />
             <div className="Clock__hours" style={rotateHand(hours, HR)} />
             <div className="Clock__minutes" style={rotateHand(minutes, MIN)} />
             <div className="Clock__info">
@@ -96,36 +124,39 @@
         </div>
       );
 
+      const getCurrentTime = () => {
+        const date = new Date();
+        return {
+          seconds: date.getSeconds(),
+          minutes: date.getMinutes(),
+          hours: date.getHours(),
+        };
+      };
+
       class App extends React.Component {
-        constructor() {
-          super();
-          const date = new Date();
-          this.state = {
-            seconds: date.getSeconds(),
-            minutes: date.getMinutes(),
-            hours: date.getHours(),
-          };
-        }
+        state = {
+          time: getCurrentTime(),
+        };
 
         componentDidMount() {
-          this.interval = setInterval(() => {
-            const date = new Date();
-            this.setState({
-              seconds: date.getSeconds(),
-              minutes: date.getMinutes(),
-              hours: date.getHours(),
-            });
-          }, 1000);
+          this.tick();
         }
+
+        tick = () => {
+          this.interval = setInterval(() => {
+            this.setState({ time: getCurrentTime() });
+          }, 1000);
+        };
 
         componentWillUnmount() {
           clearInterval(this.interval);
         }
 
         render() {
+          const { time } = this.state;
           return (
             <div className="App">
-              <Clock {...this.state} />
+              <Clock {...time} />
               <AlarmControl />
             </div>
           );
