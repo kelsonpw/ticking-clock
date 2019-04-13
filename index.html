@@ -21,35 +21,10 @@
   <body>
     <div id="app"></div>
     <script type="text/babel" data-presets="react">
-      const [SEC, MIN, HR] = [60, 60, 12];
-
-      const wait = val => (val === 59 ? 58.5 : val);
-
-      const rotateHand = (val, unit) => ({
-        transform: `rotate(${(val / unit) * 360}deg)`,
-      });
-
-      const Clock = ({ seconds, minutes, hours }) => (
-        <div className="Clock__container">
-          <div className="Clock">
-            <div
-              className="Clock__seconds"
-              style={rotateHand(wait(seconds), SEC)}
-            />
-            <div
-              className="Clock__hours"
-              style={rotateHand(hours + minutes / 60, HR)}
-            />
-            <div className="Clock__minutes" style={rotateHand(minutes, MIN)} />
-            <div className="Clock__info">
-              <span className="Clock__info__AM-PM">
-                {hours < 12 ? 'AM' : 'PM'}
-              </span>
-            </div>
-          </div>
-        </div>
-      );
-
+      /**
+       * App Helpers
+       *
+       * */
       const getCurrentTime = () => {
         const date = new Date();
         return {
@@ -58,7 +33,10 @@
           hours: date.getHours(),
         };
       };
-
+      /**
+       * App Component
+       *
+       * */
       class App extends React.Component {
         state = {
           time: getCurrentTime(),
@@ -87,6 +65,45 @@
           );
         }
       }
+
+      /**
+       *
+       * Clock Helpers
+       *
+       * */
+
+      const sweepIfEndOfMinute = val => (val === 59 ? 58.5 : val);
+
+      const rotateHand = (val, unit) => ({
+        transform: `rotate(${(val / unit) * 360}deg)`,
+      });
+
+      /**
+       *
+       * Clock Component
+       *
+       * */
+
+      const Clock = ({ seconds, minutes, hours }) => (
+        <div className="Clock__container">
+          <div className="Clock">
+            <div
+              className="Clock__seconds"
+              style={rotateHand(sweepIfEndOfMinute(seconds), 60)}
+            />
+            <div
+              className="Clock__hours"
+              style={rotateHand(hours + minutes / 60, 12)}
+            />
+            <div className="Clock__minutes" style={rotateHand(minutes, 60)} />
+            <div className="Clock__info">
+              <span className="Clock__info__AM-PM">
+                {hours < 12 ? 'AM' : 'PM'}
+              </span>
+            </div>
+          </div>
+        </div>
+      );
 
       ReactDOM.render(<App />, document.getElementById('app'));
     </script>
