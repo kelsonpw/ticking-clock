@@ -9,18 +9,25 @@
       href="https://necolas.github.io/normalize.css/8.0.1/normalize.css"
     />
     <link rel="stylesheet" media="all" href="css/index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/react-datepicker/2.3.0/react-datepicker.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.js"></script>
     <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-datepicker/2.3.0/react-datepicker.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
   </head>
   <body>
     <div id="app"></div>
     <script type="text/babel" data-presets="react">
-      const Clock = ({ seconds, minutes, hours }) => {
-        const secondDegrees = (seconds / 60) * 360 + 90;
-        const minuteDegrees = (minutes / 60) * 360 + 90;
-        const hourDegrees = (hours / 12) * 360 + 90;
+      const calcDeg = (val, unit) => (val / unit) * 360;
 
+      const Clock = ({ seconds, minutes, hours }) => {
+        const secondDegrees = (seconds / 60) * 360;
+        const minuteDegrees = (minutes / 60) * 360;
+        const hourDegrees = (hours / 12) * 360;
         return (
           <div className="Clock__container">
             <div className="Clock">
@@ -41,6 +48,7 @@
         );
       };
 
+      console.dir(window);
       class App extends React.Component {
         constructor() {
           super();
@@ -49,6 +57,7 @@
             seconds: date.getSeconds(),
             minutes: date.getMinutes(),
             hours: date.getHours(),
+            date,
           };
         }
 
@@ -70,7 +79,6 @@
         render() {
           return (
             <div className="App">
-              <h1>Clock!</h1>
               <Clock {...this.state} />
             </div>
           );
