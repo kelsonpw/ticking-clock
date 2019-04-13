@@ -31,7 +31,7 @@
           this.setState(({ hour }) => {
             const result = (24 + (hour + inc)) % 24;
             return {
-              hour: Math.max(result, 0),
+              hour: result,
             };
           });
         };
@@ -40,7 +40,7 @@
           this.setState(({ minute }) => {
             const result = (60 + (minute + inc)) % 60;
             return {
-              minute: Math.max(result, 0),
+              minute: result,
             };
           });
         };
@@ -87,12 +87,18 @@
         }
 
         render() {
-          const { hour } = this.state;
+          const { hour, minute } = this.state;
+          const { setAlarm, isAlarmSet } = this.props;
           return (
             <div className="AlarmControl">
               {this.renderHour()}
               {this.renderMinute()}
               {hour > 11 ? 'PM' : 'AM'}
+              <button
+                className="AlarmControl__set-alarm"
+                onClick={() => setAlarm({ hour, minute })}>
+                {isAlarmSet ? 'SET' : 'NOT set'}
+              </button>
             </div>
           );
         }
@@ -106,18 +112,18 @@
         transform: `rotate(${(val / unit) * 360}deg)`,
       });
 
-      const Clock = ({ seconds, minutes, hours }) => (
+      const Clock = ({ second, minute, hour }) => (
         <div className="Clock__container">
           <div className="Clock">
             <div
               className="Clock__seconds"
-              style={rotateHand(sweepWait(seconds), SEC)}
+              style={rotateHand(sweepWait(second), SEC)}
             />
-            <div className="Clock__hours" style={rotateHand(hours, HR)} />
-            <div className="Clock__minutes" style={rotateHand(minutes, MIN)} />
+            <div className="Clock__hours" style={rotateHand(hour, HR)} />
+            <div className="Clock__minutes" style={rotateHand(minute, MIN)} />
             <div className="Clock__info">
               <span className="Clock__info__AM-PM">
-                {hours < 12 ? 'AM' : 'PM'}
+                {hour < 12 ? 'AM' : 'PM'}
               </span>
             </div>
           </div>
@@ -127,15 +133,20 @@
       const getCurrentTime = () => {
         const date = new Date();
         return {
-          seconds: date.getSeconds(),
-          minutes: date.getMinutes(),
-          hours: date.getHours(),
+          second: date.getSeconds(),
+          minute: date.getMinutes(),
+          hour: date.getHours(),
         };
       };
 
       class App extends React.Component {
         state = {
           time: getCurrentTime(),
+          alarm: {
+            hour: null,
+            minute: null,
+          },
+          isAlarmSet: false,
         };
 
         componentDidMount() {
@@ -148,16 +159,27 @@
           }, 1000);
         };
 
+        setAlarm = ({ hour, minute }) => {
+          this.setState(({ isAlarmSet }) => ({
+            alarm: {
+              hour,
+              minute,
+            },
+            isAlarmSet: !isAlarmSet,
+          }));
+        };
+
         componentWillUnmount() {
           clearInterval(this.interval);
         }
 
         render() {
-          const { time } = this.state;
+          const { time, isAlarmSet } = this.state;
           return (
             <div className="App">
+              {JSON.stringify(this.state.alarm)}
               <Clock {...time} />
-              <AlarmControl />
+              <AlarmControl setAlarm={this.setAlarm} isAlarmSet={isAlarmSet} />
             </div>
           );
         }
