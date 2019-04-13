@@ -50,15 +50,15 @@
           const relativeHour = hour % 12;
           const hourVal = `${relativeHour === 0 ? 12 : relativeHour}:`;
           return (
-            <div className="AlarmControl__hours">
+            <div className="AlarmControl__hour">
               <button
-                className="AlarmControl__hours__up"
+                className="AlarmControl__hour__up"
                 onClick={() => this.onChangeHour(1)}>
                 up
               </button>
-              <div className="AlarmControl__hours__val">{hourVal}</div>
+              <div className="AlarmControl__hour__val">{hourVal}</div>
               <button
-                className="AlarmControl__hours__down"
+                className="AlarmControl__hour__down"
                 onClick={() => this.onChangeHour(-1)}>
                 down
               </button>
@@ -70,15 +70,15 @@
           const { minute } = this.state;
           const minuteVal = `${minute < 10 ? '0' : ''}${minute}`;
           return (
-            <div className="AlarmControl__minutes">
+            <div className="AlarmControl__minute">
               <button
-                className="AlarmControl__minutes__up"
+                className="AlarmControl__minute__up"
                 onClick={() => this.onChangeMinute(1)}>
                 up
               </button>
-              <div className="AlarmControl__minutes__val">{minuteVal}</div>
+              <div className="AlarmControl__minute__val">{minuteVal}</div>
               <button
-                className="AlarmControl__hours__down"
+                className="AlarmControl__hour__down"
                 onClick={() => this.onChangeMinute(-1)}>
                 down
               </button>
@@ -93,7 +93,9 @@
             <div className="AlarmControl">
               {this.renderHour()}
               {this.renderMinute()}
-              {hour > 11 ? 'PM' : 'AM'}
+              <div className="AlarmControl__AM-PM">
+                {hour < 11 ? 'AM' : 'PM'}
+              </div>
               <button
                 className="AlarmControl__set-alarm"
                 onClick={() => setAlarm({ hour, minute })}>
@@ -112,6 +114,11 @@
         transform: `rotate(${(val / unit) * 360}deg)`,
       });
 
+      const rotateHour = (hour, minute) => {
+        const hourVal = hour + minute / 60;
+        return rotateHand(hourVal, HR);
+      };
+
       const Clock = ({ second, minute, hour }) => (
         <div className="Clock__container">
           <div className="Clock">
@@ -119,7 +126,7 @@
               className="Clock__seconds"
               style={rotateHand(sweepWait(second), SEC)}
             />
-            <div className="Clock__hours" style={rotateHand(hour, HR)} />
+            <div className="Clock__hours" style={rotateHour(hour, minute)} />
             <div className="Clock__minutes" style={rotateHand(minute, MIN)} />
             <div className="Clock__info">
               <span className="Clock__info__AM-PM">
@@ -139,6 +146,11 @@
         };
       };
 
+      const compareTime = (time, alarm) =>
+        time.hour === alarm.hour &&
+        time.minute === alarm.minute &&
+        time.second === 0;
+
       class App extends React.Component {
         state = {
           time: getCurrentTime(),
@@ -151,6 +163,15 @@
 
         componentDidMount() {
           this.tick();
+        }
+
+        componentDidUpdate() {
+          const { isAlarmSet, alarm, time } = this.state;
+          if (isAlarmSet) {
+            if (compareTime(time, alarm)) {
+              alert('ALARM IS GOING OFF');
+            }
+          }
         }
 
         tick = () => {
@@ -177,7 +198,6 @@
           const { time, isAlarmSet } = this.state;
           return (
             <div className="App">
-              {JSON.stringify(this.state.alarm)}
               <Clock {...time} />
               <AlarmControl setAlarm={this.setAlarm} isAlarmSet={isAlarmSet} />
             </div>
