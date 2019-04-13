@@ -1,36 +1,36 @@
 @import url('https://fonts.googleapis.com/css?family=Fredoka+One');
 
 .App {
-  height: 100vh;
   display: grid;
+  height: 100vh;
   place-content: center;
   text-align: center;
 }
 
 .Clock__container {
+  border-radius: 50%;
   border: 25px solid #000;
   display: inline-flex;
-  border-radius: 50%;
   padding: 15px;
 }
 
 .Clock {
+  background: url(../assets/clockFace.svg) no-repeat center;
+  height: 600px;
+  list-style: none;
+  margin: auto;
   position: relative;
   width: 600px;
-  height: 600px;
-  margin: auto;
-  background: url(../assets/clockFace.svg) no-repeat center;
-  list-style: none;
 }
 
 .Clock__seconds,
 .Clock__minutes,
 .Clock__hours {
-  position: absolute;
-  width: 30px;
   height: 600px;
-  top: 0px;
   left: 285px;
+  position: absolute;
+  top: 0px;
+  width: 30px;
 }
 
 .Clock__seconds {
@@ -49,16 +49,16 @@
 }
 
 .Clock__info {
-  position: absolute;
-  top: 280px;
-  left: 370px;
+  border-radius: 5px;
   border: 1.5px solid #000;
   display: grid;
+  left: 370px;
   place-content: center;
-  border-radius: 5px;
+  position: absolute;
+  top: 280px;
 }
 
 .Clock__info__AM-PM {
-  padding: 10px 50px;
   font-family: 'Fredoka One', cursive;
+  padding: 10px 50px;
 }
