@@ -1,22 +1,40 @@
 .Clock__container {
+  border: 25px solid black;
+  display: inline-flex;
   border-radius: 50%;
-  background: #fff url(../assets/clockFace.svg) no-repeat center;
-  background-size: 88%;
-  height: 20em;
-  padding-bottom: 31%;
-  position: relative;
-  width: 20em;
+  padding: 15px;
 }
 
-.Clock__container:after {
-  background: #000;
-  border-radius: 50%;
-  content: '';
+.Clock {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  margin: auto;
+  background: url(../assets/clockFace.svg) no-repeat center;
+  list-style: none;
+}
+
+.Clock__seconds,
+.Clock__minutes,
+.Clock__hours {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 1em;
-  height: 1em;
-  z-index: 10;
+  width: 30px;
+  height: 600px;
+  top: 0px;
+  left: 285px;
+}
+
+.Clock__seconds {
+  background: url(../assets/secHand.png);
+  z-index: 3;
+}
+
+.Clock__minutes {
+  background: url(../assets/minHand.png);
+  z-index: 2;
+}
+
+.Clock__hours {
+  background: url(../assets/hourHand.png);
+  z-index: 1;
 }

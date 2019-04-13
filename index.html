@@ -23,14 +23,19 @@
 
         return (
           <div className="Clock__container">
-            <div className="Clock__hand">
-              <div className="Clock__hand__hours" />
-            </div>
-            <div className="Clock__hand">
-              <div className="Clock__hand__seconds" />
-            </div>
-            <div className="Clock__hand">
-              <div className="Clock__hand__minutes" />
+            <div className="Clock">
+              <div
+                className="Clock__seconds"
+                style={{ transform: `rotate(${secondDegrees}deg)` }}
+              />
+              <div
+                className="Clock__hours"
+                style={{ transform: `rotate(${hourDegrees}deg)` }}
+              />
+              <div
+                className="Clock__minutes"
+                style={{ transform: `rotate(${minuteDegrees}deg)` }}
+              />
             </div>
           </div>
         );
@@ -64,10 +69,10 @@
 
         render() {
           return (
-            <div className="container">
+            <React.Fragment>
               <h1>Clock!</h1>
               <Clock {...this.state} />
-            </div>
+            </React.Fragment>
           );
         }
       }
