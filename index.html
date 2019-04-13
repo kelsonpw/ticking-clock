@@ -16,6 +16,65 @@
   <body>
     <div id="app"></div>
     <script type="text/babel" data-presets="react">
+      class AlarmControl extends React.Component {
+        state = {
+          hours: 0,
+          minutes: 0,
+        };
+
+        onChangeHour = inc => {
+          this.setState(({ hours }) => {
+            const result = (hours + inc) % 24;
+            return {
+              hours: Math.max(result, 0),
+            };
+          });
+        };
+
+        onChangeMinutes = inc => {
+          this.setState(({ minutes }) => {
+            const result = (minutes + inc) % 60;
+            return {
+              minutes: Math.max(result, 0),
+            };
+          });
+        };
+
+        render() {
+          const { hours, minutes } = this.state;
+          return (
+            <div className="AlarmControl">
+              <div className="AlarmControl__hours">
+                <div
+                  className="AlarmControl__hours__up"
+                  onClick={() => this.onChangeHour(1)}>
+                  {'<'}
+                </div>
+                <div className="AlarmControl__hours__val">{hours}</div>
+                <div
+                  className="AlarmControl__hours__down"
+                  onClick={() => this.onChangeHour(-1)}>
+                  {'>'}
+                </div>
+              </div>
+              <div className="AlarmControl__minutes">
+                <div
+                  className="AlarmControl__minutes__up"
+                  onClick={() => this.onChangeHour(1)}>
+                  {'<'}
+                </div>
+                <div className="AlarmControl__minutes__val">{hours}</div>
+                <div
+                  className="AlarmControl__hours__down"
+                  onClick={() => this.onChangeHour(-1)}>
+                  {'>'}
+                </div>
+              </div>
+            </div>
+          );
+        }
+      }
+
       const [SEC, MIN, HR] = [60, 60, 12];
 
       const rotateHand = (val, unit) => ({
@@ -67,6 +126,7 @@
           return (
             <div className="App">
               <Clock {...this.state} />
+              <AlarmControl />
             </div>
           );
         }
