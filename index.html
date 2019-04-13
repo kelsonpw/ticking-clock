@@ -74,8 +74,8 @@
 
       const sweepIfEndOfMinute = val => (val === 59 ? 58.5 : val);
 
-      const rotateHand = (val, unit) => ({
-        transform: `rotate(${(val / unit) * 360}deg)`,
+      const rotateHand = (val, arcs) => ({
+        transform: `rotate(${(val / arcs) * 360}deg)`,
       });
 
       /**
