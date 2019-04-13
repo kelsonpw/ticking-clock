@@ -36,7 +36,10 @@
               className="Clock__seconds"
               style={rotateHand(wait(seconds), SEC)}
             />
-            <div className="Clock__hours" style={rotateHand(hours, HR)} />
+            <div
+              className="Clock__hours"
+              style={rotateHand(hours + minutes / 60, HR)}
+            />
             <div className="Clock__minutes" style={rotateHand(minutes, MIN)} />
             <div className="Clock__info">
               <span className="Clock__info__AM-PM">
