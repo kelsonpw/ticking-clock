@@ -144,7 +144,7 @@
         return rotateHand(hourVal, 12);
       };
 
-      const Clock = ({ second, minute, hour }) => (
+      const Clock = ({ hour, isAlarmSet, minute, second }) => (
         <div className="Clock__container">
           <div className="Clock">
             <div
@@ -157,6 +157,11 @@
               <span className="Clock__info__AM-PM">
                 {hour < 12 ? 'AM' : 'PM'}
               </span>
+              <div className="Clock__info__data">
+                {isAlarmSet && (
+                  <span className="Clock__info__alarm fas fa-bell" />
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -203,6 +208,10 @@
           }
         }
 
+        componentWillUnmount() {
+          clearInterval(this.interval);
+        }
+
         tick = () => {
           this.interval = setInterval(() => {
             this.setState({ time: getCurrentTime() });
@@ -223,10 +232,6 @@
           this.setState({ ...this.initialAlarmState });
         };
 
-        componentWillUnmount() {
-          clearInterval(this.interval);
-        }
-
         render() {
           const { time, isAlarmSet } = this.state;
           return (
@@ -236,7 +241,7 @@
                 isAlarmSet={isAlarmSet}
                 deactivateAlarm={this.deactivateAlarm}
               />
-              <Clock {...time} />
+              <Clock {...time} isAlarmSet={isAlarmSet} />
             </div>
           );
         }
