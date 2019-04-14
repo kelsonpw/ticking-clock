@@ -12,7 +12,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   justify-items: center;
-  margin: 100px 0;
+  margin: 100px 50px 100px 0;
 }
 
 .Clock__container {

@@ -77,7 +77,7 @@
        * used to control Alarm time and AM/PM
        **/
 
-      const ControlOption = ({ up, down, value }) => (
+      const ControlOption = ({ down, up, value }) => (
         <div className="AlarmControl__option">
           <ControlButton onClick={up} up />
           <div className="AlarmControl__val">{value}</div>
@@ -103,10 +103,10 @@
           super(props);
           const { initialHour, initialMinute } = props;
           this.state = {
+            buttonHovered: false,
             hour: initialHour,
             minute: initialMinute,
             pm: initialHour > 11,
-            buttonHovered: false,
           };
         }
 
@@ -169,8 +169,8 @@
               color: !buttonHovered ? buttonColor : 'white',
             },
             buttonStyle: {
-              border: `3px solid ${buttonColor}`,
               backgroundColor: buttonHovered && buttonColor,
+              border: `3px solid ${buttonColor}`,
             },
           };
         };
@@ -179,15 +179,15 @@
           const { buttonHovered } = this.state;
           const { isAlarmSet } = this.props;
           const alarmIconClass = `fas fa-bell${!isAlarmSet ? '-slash' : ''}`;
-          const { textStyle, buttonStyle } = this.createButtonStyles();
+          const { buttonStyle, textStyle } = this.createButtonStyles();
 
           return (
             <div className="AlarmControl__set">
               <button
                 className="AlarmControl__set-alarm "
+                onBlur={this.unhover}
                 onClick={this.onSubmitSetAlarm}
                 onFocus={this.hover}
-                onBlur={this.unhover}
                 onMouseEnter={this.hover}
                 onMouseLeave={this.unhover}
                 style={buttonStyle}>
@@ -210,24 +210,24 @@
 
         render() {
           const { hour, minute, pm } = this.state;
-          const { setAlarm, isAlarmSet } = this.props;
+          const { isAlarmSet, setAlarm } = this.props;
 
           return (
             <div className="AlarmControl">
               <div className="AlarmControl__options">
                 <ControlOption
-                  up={() => this.onChangeHour(1)}
                   down={() => this.onChangeHour(-1)}
+                  up={() => this.onChangeHour(1)}
                   value={`${getRelativeHour(hour)}:`}
                 />
                 <ControlOption
-                  up={() => this.onChangeMinute(1)}
                   down={() => this.onChangeMinute(-1)}
+                  up={() => this.onChangeMinute(1)}
                   value={`${minute < 10 ? '0' : ''}${minute}`}
                 />
                 <ControlOption
-                  up={this.onToggleAmPm}
                   down={this.onToggleAmPm}
+                  up={this.onToggleAmPm}
                   value={(pm && 'PM') || 'AM'}
                 />
               </div>
@@ -355,11 +355,6 @@
        **/
 
       class App extends React.Component {
-        /**
-         * Initial Alarm State
-         * (App) Component
-         *
-         * */
         initialAlarmState = {
           alarm: {
             hour: null,
@@ -369,10 +364,6 @@
           isAlarmGoingOff: false,
         };
 
-        /**
-         * State
-         * (App) Component
-         **/
         state = {
           time: getCurrentTime(),
           ...this.initialAlarmState,
