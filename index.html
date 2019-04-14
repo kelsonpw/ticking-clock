@@ -40,7 +40,7 @@
             <small className="AlarmMessage__warning">
               (Click anywhere on the page to turn off the alarm.)
             </small>
-            <p className="AlarmMessage__time">{`${hourVal}:${minute} ${
+            <p className="AlarmMessage__notice">{`${hourVal}:${minute} ${
               hour > 11 ? 'pm' : 'am'
             }`}</p>
           </div>
@@ -135,26 +135,45 @@
           );
         }
 
-        createStyles = () => {
+        renderButton = () => {
           const { buttonHovered } = this.state;
           const { isAlarmSet } = this.props;
           const buttonColor = isAlarmSet ? '#28a228' : '#d50000';
-
-          return {
-            textStyle: {
-              color: !buttonHovered ? buttonColor : 'white',
-            },
-            buttonStyle: {
-              border: `3px solid ${buttonColor}`,
-              backgroundColor: buttonHovered && buttonColor,
-            },
+          const textStyle = {
+            color: !buttonHovered ? buttonColor : 'white',
           };
+          const buttonStyle = {
+            border: `3px solid ${buttonColor}`,
+            backgroundColor: buttonHovered && buttonColor,
+          };
+          return (
+            <div className="AlarmControl__set">
+              <button
+                tabIndex={1}
+                className="AlarmControl__set-alarm "
+                onClick={this.onSubmitSetAlarm}
+                onFocus={this.hover}
+                onBlur={this.unhover}
+                onMouseEnter={this.hover}
+                onMouseLeave={this.unhover}
+                style={buttonStyle}>
+                <i
+                  className={`AlarmControl__bell fas fa-bell${
+                    !isAlarmSet ? '-slash' : ''
+                  }`}
+                  style={textStyle}
+                />
+                <p className="AlarmControl__set-alarm__text" style={textStyle}>
+                  {isAlarmSet ? 'ON' : 'OFF'}
+                </p>
+              </button>
+            </div>
+          );
         };
 
         render() {
           const { hour, minute } = this.state;
           const { setAlarm, isAlarmSet } = this.props;
-          const { textStyle, buttonStyle } = this.createStyles();
           return (
             <div className="AlarmControl">
               <div className="AlarmControl__options">
@@ -162,29 +181,7 @@
                 {this.renderMinute()}
                 {this.renderAmPm()}
               </div>
-              <div className="AlarmControl__set">
-                <button
-                  tabIndex={1}
-                  className="AlarmControl__set-alarm "
-                  onClick={this.onSubmitSetAlarm}
-                  onFocus={this.hover}
-                  onBlur={this.unhover}
-                  onMouseEnter={this.hover}
-                  onMouseLeave={this.unhover}
-                  style={buttonStyle}>
-                  <i
-                    className={`AlarmControl__bell fas fa-bell${
-                      !isAlarmSet ? '-slash' : ''
-                    }`}
-                    style={textStyle}
-                  />
-                  <p
-                    className="AlarmControl__set-alarm__text"
-                    style={textStyle}>
-                    {isAlarmSet ? 'ON' : 'OFF'}
-                  </p>
-                </button>
-              </div>
+              {this.renderButton()}
             </div>
           );
         }
@@ -279,8 +276,8 @@
         }
 
         componentDidUpdate() {
-          const { isAlarmSet, alarm, time } = this.state;
-          if (isAlarmSet) {
+          const { isAlarmGoingOff, isAlarmSet, alarm, time } = this.state;
+          if (isAlarmSet && !isAlarmGoingOff) {
             if (compareTime(time, alarm)) {
               this.onDetectAlarm();
             }
@@ -300,13 +297,13 @@
         onDetectAlarm = () => {
           const { isAlarmGoingOff } = this.state;
           if (!isAlarmGoingOff) {
-            this.setState({ isAlarmGoingOff: true }, () =>
-              document.addEventListener('onclick', this.onDetectAlarm)
-            );
+            this.setState({ isAlarmGoingOff: true }, () => {
+              document.addEventListener('click', this.onDetectAlarm);
+            });
           } else {
             this.setState({ isAlarmGoingOff: false }, () => {
               this.deactivateAlarm();
-              document.removeEventListener('onclick', this.onDetectAlarm);
+              document.removeEventListener('click', this.onDetectAlarm);
             });
           }
         };
@@ -327,8 +324,8 @@
 
         render() {
           const { time, isAlarmSet, isAlarmGoingOff } = this.state;
-          return isAlarmGoingOff ? (
-            <div className="App">
+          return !isAlarmGoingOff ? (
+            <div className="AlarmClock">
               <AlarmControl
                 setAlarm={this.setAlarm}
                 isAlarmSet={isAlarmSet}
