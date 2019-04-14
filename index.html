@@ -25,6 +25,7 @@
     <script type="text/babel" data-presets="react">
       const ControlButton = ({ onClick, up }) => (
         <button
+          tabIndex={1}
           className={`AlarmControl__btn fas fa-caret-square-${
             !up ? 'down' : 'up'
           }`}
@@ -37,6 +38,7 @@
           hour: 0,
           minute: 0,
           pm: false,
+          buttonHovered: false,
         };
 
         onChangeHour = inc => {
@@ -108,7 +110,7 @@
         }
 
         render() {
-          const { hour, minute } = this.state;
+          const { buttonHovered, hour, minute } = this.state;
           const { setAlarm, isAlarmSet } = this.props;
           const buttonColor = isAlarmSet ? '#28a228' : '#d50000';
           return (
@@ -122,21 +124,24 @@
                 <button
                   className="AlarmControl__set-alarm "
                   onClick={this.onSubmitSetAlarm}
+                  onMouseEnter={() => this.setState({ buttonHovered: true })}
+                  onMouseLeave={() => this.setState({ buttonHovered: false })}
                   style={{
                     border: `3px solid ${buttonColor}`,
+                    backgroundColor: buttonHovered && buttonColor,
                   }}>
                   <i
                     className={`AlarmControl__bell fas fa-bell${
                       !isAlarmSet ? '-slash' : ''
                     }`}
                     style={{
-                      color: isAlarmSet ? '#28a228' : '#d50000',
+                      color: !buttonHovered ? buttonColor : 'white',
                     }}
                   />
                   <p
                     className="AlarmControl__set-alarm__text"
                     style={{
-                      color: buttonColor,
+                      color: !buttonHovered ? buttonColor : 'white',
                     }}>
                     {isAlarmSet ? 'ON' : 'OFF'}
                   </p>
