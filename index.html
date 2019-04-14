@@ -334,7 +334,14 @@
 
         const getCurrentTime = () => {
           const date = new Date();
-          return {};
+          return {
+            day: date.getDate(),
+            hour: date.getHours(),
+            minute: date.getMinutes(),
+            month: date.getMonth(),
+            second: date.getSeconds(),
+            year: date.getFullYear(),
+          };
         };
 
         const compareTime = (time, alarm) =>
