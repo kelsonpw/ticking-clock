@@ -439,7 +439,7 @@
 
         render() {
           const { time, isAlarmSet, isAlarmGoingOff } = this.state;
-          return isAlarmGoingOff ? (
+          return !isAlarmGoingOff ? (
             <div className="AlarmClock">
               <AlarmControl
                 initial={time}
