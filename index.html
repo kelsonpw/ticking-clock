@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Curie</title>
+    <title>Tick tick tick...</title>
+    <link rel="shortcut icon" type="image/png" href="./assets/favicon.ico" />
     <link
       rel="stylesheet"
       media="all"
@@ -23,6 +24,29 @@
   <body>
     <div id="app"></div>
     <script type="text/babel" data-presets="react">
+      const getRelativeHour = hour => {
+        const relativeHour = hour % 12;
+        return relativeHour === 0 ? 12 : relativeHour;
+      };
+
+      const AlarmMessage = ({ hour, minute }) => {
+        const hourVal = getRelativeHour(hour);
+        return (
+          <div className="AlarmMessage">
+            <h1 className="AlarmMessage__header">BUZZ BUZZ!</h1>
+            <h3 className="AlarmMessage__notice">
+              Your alarm went off, let's go!
+            </h3>
+            <small className="AlarmMessage__warning">
+              (Click anywhere on the page to turn off the alarm.)
+            </small>
+            <p className="AlarmMessage__time">{`${hourVal}:${minute} ${
+              hour > 11 ? 'pm' : 'am'
+            }`}</p>
+          </div>
+        );
+      };
+
       const ControlButton = ({ onClick, up }) => (
         <button
           tabIndex={1}
@@ -40,6 +64,9 @@
           pm: false,
           buttonHovered: false,
         };
+
+        hover = () => this.setState({ buttonHovered: true });
+        unhover = () => this.setState({ buttonHovered: false });
 
         onChangeHour = inc => {
           const { deactivateAlarm } = this.props;
@@ -74,12 +101,11 @@
 
         renderHour() {
           const { hour } = this.state;
-          const relativeHour = hour % 12;
-          const hourVal = `${relativeHour === 0 ? 12 : relativeHour}:`;
+          const hourVal = getRelativeHour(hour);
           return (
             <div className="AlarmControl__option">
               <ControlButton onClick={() => this.onChangeHour(1)} up />
-              <div className="AlarmControl__val">{hourVal}</div>
+              <div className="AlarmControl__val">{`${hourVal}:`}</div>
               <ControlButton onClick={() => this.onChangeHour(-1)} />
             </div>
           );
@@ -109,10 +135,26 @@
           );
         }
 
-        render() {
-          const { buttonHovered, hour, minute } = this.state;
-          const { setAlarm, isAlarmSet } = this.props;
+        createStyles = () => {
+          const { buttonHovered } = this.state;
+          const { isAlarmSet } = this.props;
           const buttonColor = isAlarmSet ? '#28a228' : '#d50000';
+
+          return {
+            textStyle: {
+              color: !buttonHovered ? buttonColor : 'white',
+            },
+            buttonStyle: {
+              border: `3px solid ${buttonColor}`,
+              backgroundColor: buttonHovered && buttonColor,
+            },
+          };
+        };
+
+        render() {
+          const { hour, minute } = this.state;
+          const { setAlarm, isAlarmSet } = this.props;
+          const { textStyle, buttonStyle } = this.createStyles();
           return (
             <div className="AlarmControl">
               <div className="AlarmControl__options">
@@ -122,27 +164,23 @@
               </div>
               <div className="AlarmControl__set">
                 <button
+                  tabIndex={1}
                   className="AlarmControl__set-alarm "
                   onClick={this.onSubmitSetAlarm}
-                  onMouseEnter={() => this.setState({ buttonHovered: true })}
-                  onMouseLeave={() => this.setState({ buttonHovered: false })}
-                  style={{
-                    border: `3px solid ${buttonColor}`,
-                    backgroundColor: buttonHovered && buttonColor,
-                  }}>
+                  onFocus={this.hover}
+                  onBlur={this.unhover}
+                  onMouseEnter={this.hover}
+                  onMouseLeave={this.unhover}
+                  style={buttonStyle}>
                   <i
                     className={`AlarmControl__bell fas fa-bell${
                       !isAlarmSet ? '-slash' : ''
                     }`}
-                    style={{
-                      color: !buttonHovered ? buttonColor : 'white',
-                    }}
+                    style={textStyle}
                   />
                   <p
                     className="AlarmControl__set-alarm__text"
-                    style={{
-                      color: !buttonHovered ? buttonColor : 'white',
-                    }}>
+                    style={textStyle}>
                     {isAlarmSet ? 'ON' : 'OFF'}
                   </p>
                 </button>
@@ -228,6 +266,7 @@
             minute: null,
           },
           isAlarmSet: false,
+          isAlarmGoingOff: false,
         };
 
         state = {
@@ -243,7 +282,7 @@
           const { isAlarmSet, alarm, time } = this.state;
           if (isAlarmSet) {
             if (compareTime(time, alarm)) {
-              alert('ALARM IS GOING OFF');
+              this.onDetectAlarm();
             }
           }
         }
@@ -256,6 +295,20 @@
           this.interval = setInterval(() => {
             this.setState({ time: getCurrentTime() });
           }, 1000);
+        };
+
+        onDetectAlarm = () => {
+          const { isAlarmGoingOff } = this.state;
+          if (!isAlarmGoingOff) {
+            this.setState({ isAlarmGoingOff: true }, () =>
+              document.addEventListener('onclick', this.onDetectAlarm)
+            );
+          } else {
+            this.setState({ isAlarmGoingOff: false }, () => {
+              this.deactivateAlarm();
+              document.removeEventListener('onclick', this.onDetectAlarm);
+            });
+          }
         };
 
         setAlarm = ({ hour, minute }) => {
@@ -273,8 +326,8 @@
         };
 
         render() {
-          const { time, isAlarmSet } = this.state;
-          return (
+          const { time, isAlarmSet, isAlarmGoingOff } = this.state;
+          return isAlarmGoingOff ? (
             <div className="App">
               <AlarmControl
                 setAlarm={this.setAlarm}
@@ -283,6 +336,8 @@
               />
               <Clock {...time} isAlarmSet={isAlarmSet} />
             </div>
+          ) : (
+            <AlarmMessage {...time} />
           );
         }
       }
