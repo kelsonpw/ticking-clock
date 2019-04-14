@@ -289,27 +289,22 @@
        * passed.
        * */
 
-      const Clock = ({
-        month,
-        day,
-        hour,
-        isAlarmSet,
-        minute,
-        second,
-        year,
-      }) => (
+      const Clock = ({ time, isAlarmSet }) => (
         <div className="Clock__container">
           <div className="Clock">
             <div
               className="Clock__seconds"
-              style={rotateHand(sweepWait(second))}
+              style={rotateHand(sweepWait(time.second))}
             />
-            <div className="Clock__hours" style={rotateHour(hour, minute)} />
-            <div className="Clock__minutes" style={rotateHand(minute)} />
+            <div
+              className="Clock__hours"
+              style={rotateHour(time.hour, time.minute)}
+            />
+            <div className="Clock__minutes" style={rotateHand(time.minute)} />
             <div className="Clock__info">
               <div className="Clock__info__data">
                 <span className="Clock__info__AM-PM">
-                  {hour < 12 ? 'AM' : 'PM'}
+                  {time.hour < 12 ? 'AM' : 'PM'}
                 </span>
                 <span
                   className={
@@ -320,9 +315,9 @@
                 />
               </div>
               <div className="Clock__info__data">
-                <span className="Clock__info__text">{month + 1}</span>
-                <span className="Clock__info__text">{day}</span>
-                <span className="Clock__info__text">{year}</span>
+                <span className="Clock__info__text">{time.month + 1}</span>
+                <span className="Clock__info__text">{time.day}</span>
+                <span className="Clock__info__text">{time.year}</span>
               </div>
             </div>
           </div>
@@ -460,7 +455,7 @@
                 isAlarmSet={isAlarmSet}
                 deactivateAlarm={this.deactivateAlarm}
               />
-              <Clock {...time} isAlarmSet={isAlarmSet} />
+              <Clock time={time} isAlarmSet={isAlarmSet} />
             </div>
           ) : (
             <AlarmMessage hour={time.hour} minute={time.minute} />
