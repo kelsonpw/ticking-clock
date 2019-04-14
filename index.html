@@ -94,7 +94,7 @@
             const { hour, minute, second } = props.initial;
             this.state = {
               buttonHovered: false,
-              hour,
+              hour: hour % 12,
               minute,
               second,
               pm: hour > 11,
