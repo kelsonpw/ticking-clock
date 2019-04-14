@@ -147,6 +147,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 12px;
 }
 
 .AlarmControl__set-alarm__text {
