@@ -69,11 +69,10 @@
         constructor(props) {
           super(props);
           const { initialHour, initialMinute } = props;
-          const pm = initialHour > 11;
           this.state = {
             hour: initialHour,
             minute: initialMinute,
-            pm,
+            pm: initialHour > 11,
             buttonHovered: false,
           };
         }
