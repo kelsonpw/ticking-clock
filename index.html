@@ -347,9 +347,16 @@
         time.minute === alarm.minute &&
         time.second === 0;
 
+      /**
+       * (App) Component
+       * renders a Clock and Alarm Controls to set an alarm.
+       **/
+
       class App extends React.Component {
         /**
-         * State (App)
+         * Initial Alarm State
+         * (App) Component
+         *
          * */
         initialAlarmState = {
           alarm: {
@@ -360,13 +367,18 @@
           isAlarmGoingOff: false,
         };
 
+        /**
+         * State
+         * (App) Component
+         **/
         state = {
           time: getCurrentTime(),
           ...this.initialAlarmState,
         };
 
         /**
-         * React Lifecycle methods (App)
+         * Life-cycle methods
+         * (App) Component
          * */
 
         componentDidMount() {
@@ -387,7 +399,8 @@
         }
 
         /**
-         * Event Listeners/Click handlers/instance methods (App)
+         * Event Listeners/Click handlers/instance methods
+         * (App) Component
          * */
 
         tick = () => {
@@ -425,7 +438,8 @@
         };
 
         /**
-         * Render method (App)
+         * Render method
+         * (App) Component
          * */
 
         render() {
