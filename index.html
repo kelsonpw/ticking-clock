@@ -1,4 +1,4 @@
-<DOCTYPE html>
+<!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="UTF-8" />
@@ -45,7 +45,7 @@
               <h3 className="AlarmMessage__notice">
                 {`Your alarm went off, let's go!`}
               </h3>
-              <small className="AlarmMessage__warning">
+              <small>
                 (Click anywhere on the page to turn off the alarm.)
               </small>
               <p className="AlarmMessage__notice">{`${hourVal}:${
@@ -66,12 +66,12 @@
         const ControlOption = ({ down, up, value }) => (
           <div className="AlarmControl__option">
             <button
-              className={'AlarmControl__btn fas fa-caret-square-up'}
+              className={'AlarmControl__option__btn fas fa-caret-square-up'}
               onClick={up}
             />
-            <div className="AlarmControl__val">{value}</div>
+            <div className="AlarmControl__option__value">{value}</div>
             <button
-              className={'AlarmControl__btn fas fa-caret-square-down'}
+              className={'AlarmControl__option__btn fas fa-caret-square-down'}
               onClick={down}
             />
           </div>
@@ -175,9 +175,9 @@
             const { buttonStyle, textStyle } = this.createButtonStyles();
 
             return (
-              <div className="AlarmControl__set">
+              <div className="AlarmControl__set-button">
                 <button
-                  className="AlarmControl__set-alarm "
+                  className="AlarmControl__set-button__button "
                   onBlur={this.unhover}
                   onClick={this.onSubmitSetAlarm}
                   onFocus={this.hover}
@@ -185,11 +185,11 @@
                   onMouseLeave={this.unhover}
                   style={buttonStyle}>
                   <i
-                    className={'AlarmControl__bell ' + alarmIconClass}
+                    className={'AlarmControl__set-button__bell ' + alarmIconClass}
                     style={textStyle}
                   />
                   <p
-                    className="AlarmControl__set-alarm__text"
+                    className="AlarmControl__set-button__text"
                     style={textStyle}>
                     {isAlarmSet ? 'ON' : 'OFF'}
                   </p>

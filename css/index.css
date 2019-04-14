@@ -120,8 +120,8 @@ body {
   text-align: center;
 }
 
-.AlarmControl__btn,
-.AlarmControl__set-alarm {
+.AlarmControl__option__btn,
+.AlarmControl__set-button__button {
   border: 0;
   cursor: pointer;
   font-size: 30px;
@@ -130,18 +130,18 @@ body {
   padding: 10px;
 }
 
-.AlarmControl__btn:hover,
-.AlarmControl__btn:focus {
+.AlarmControl__option__btn:hover,
+.AlarmControl__option__btn:focus {
   font-size: 34px;
   text-shadow: -1px -1px 0 #002e63, 1px -1px 0 #002e63, -1px 1px 0 #002e63,
     1px 1px 0 #002e63;
 }
 
-.AlarmControl__val {
+.AlarmControl__option__value {
   font-size: 25px;
 }
 
-.AlarmControl__set {
+.AlarmControl__set-button {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -151,7 +151,7 @@ body {
   margin-top: 25px;
 }
 
-.AlarmControl__set-alarm {
+.AlarmControl__set-button__button {
   align-items: center;
   border-radius: 12px;
   display: flex;
@@ -159,12 +159,12 @@ body {
   width: 100%;
 }
 
-.AlarmControl__set-alarm__text {
+.AlarmControl__set-button__text {
   font-size: 25px;
   min-width: 75px;
 }
 
-.AlarmControl__bell {
+.AlarmControl__set-button__bell {
   width: 45px;
 }
 
