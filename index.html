@@ -144,7 +144,15 @@
         return rotateHand(hourVal, 12);
       };
 
-      const Clock = ({ hour, isAlarmSet, minute, second }) => (
+      const Clock = ({
+        month,
+        day,
+        hour,
+        isAlarmSet,
+        minute,
+        second,
+        year,
+      }) => (
         <div className="Clock__container">
           <div className="Clock">
             <div
@@ -154,13 +162,19 @@
             <div className="Clock__hours" style={rotateHour(hour, minute)} />
             <div className="Clock__minutes" style={rotateHand(minute)} />
             <div className="Clock__info">
-              <span className="Clock__info__AM-PM">
-                {hour < 12 ? 'AM' : 'PM'}
-              </span>
               <div className="Clock__info__data">
-                {isAlarmSet && (
-                  <span className="Clock__info__alarm fas fa-bell" />
-                )}
+                <span className="Clock__info__AM-PM">
+                  {hour < 12 ? 'AM' : 'PM'}
+                </span>
+                <span
+                  className={`Clock__info__alarm ${!isAlarmSet &&
+                    'fas fa-bell'}`}
+                />
+              </div>
+              <div className="Clock__info__data">
+                <span className="Clock__info__text">{month + 1}</span>
+                <span className="Clock__info__text">{day}</span>
+                <span className="Clock__info__text">{year}</span>
               </div>
             </div>
           </div>
@@ -173,6 +187,9 @@
           second: date.getSeconds(),
           minute: date.getMinutes(),
           hour: date.getHours(),
+          month: date.getMonth(),
+          day: date.getDate(),
+          year: date.getFullYear(),
         };
       };
 
