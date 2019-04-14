@@ -4,8 +4,9 @@
 
 .App {
   display: grid;
-  grid-template-rows: 1fr 200px;
+  grid-template-columns: repeat(2, 1fr);
   justify-items: center;
+  margin: 100px;
 }
 
 .Clock__container {
@@ -66,8 +67,13 @@
 
 .AlarmControl {
   display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+.AlarmControl__options {
+  display: grid;
+  place-content: end;
   grid-template-columns: repeat(3, 150px);
-  grid-template-rows: repeat(2, 1fr);
 }
 
 .AlarmControl__option,
@@ -78,7 +84,8 @@
   text-align: center;
 }
 
-.AlarmControl__btn {
+.AlarmControl__btn,
+.AlarmControl__set-alarm {
   border: 0;
   padding: 20px;
   margin: 0;
@@ -90,4 +97,16 @@
 .AlarmControl__val {
   font-family: 'Fredoka One', cursive;
   font-size: 25px;
+}
+
+.AlarmControl__set {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+}
+
+.AlarmControl__set-alarm__text {
+  font-family: 'Fredoka One', cursive;
+  font-size: 25px;
+  padding: 20px;
 }

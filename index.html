@@ -23,15 +23,14 @@
   <body>
     <div id="app"></div>
     <script type="text/babel" data-presets="react">
-      const ControlButton = ({ onClick, up }) => {
-        const iconType = !up ? 'down' : 'up';
-        return (
-          <button
-            className={`AlarmControl__btn fas fa-caret-square-${iconType}`}
-            onClick={onClick}
-          />
-        );
-      };
+      const ControlButton = ({ onClick, up }) => (
+        <button
+          className={`AlarmControl__btn fas fa-caret-square-${
+            !up ? 'down' : 'up'
+          }`}
+          onClick={onClick}
+        />
+      );
 
       class AlarmControl extends React.Component {
         state = {
@@ -113,14 +112,20 @@
           const { setAlarm, isAlarmSet } = this.props;
           return (
             <div className="AlarmControl">
-              {this.renderHour()}
-              {this.renderMinute()}
-              {this.renderAmPm()}
-              <button
-                className="AlarmControl__set-alarm"
-                onClick={this.onSubmitSetAlarm}>
-                {isAlarmSet ? 'SET' : 'NOT set'}
-              </button>
+              <div className="AlarmControl__options">
+                {this.renderHour()}
+                {this.renderMinute()}
+                {this.renderAmPm()}
+              </div>
+              <div className="AlarmControl__set">
+                <button
+                  className="AlarmControl__set-alarm fas fa-bell"
+                  onClick={this.onSubmitSetAlarm}>
+                  <span className="AlarmControl__set-alarm__text">
+                    {isAlarmSet ? 'ON' : 'OFF'}
+                  </span>
+                </button>
+              </div>
             </div>
           );
         }
@@ -130,13 +135,13 @@
 
       const sweepWait = val => (val === 59 ? 58.5 : val);
 
-      const rotateHand = (val, unit) => ({
+      const rotateHand = (val, unit = 60) => ({
         transform: `rotate(${(val / unit) * 360}deg)`,
       });
 
       const rotateHour = (hour, minute) => {
         const hourVal = hour + minute / 60;
-        return rotateHand(hourVal, HR);
+        return rotateHand(hourVal, 12);
       };
 
       const Clock = ({ second, minute, hour }) => (
@@ -144,10 +149,10 @@
           <div className="Clock">
             <div
               className="Clock__seconds"
-              style={rotateHand(sweepWait(second), SEC)}
+              style={rotateHand(sweepWait(second))}
             />
             <div className="Clock__hours" style={rotateHour(hour, minute)} />
-            <div className="Clock__minutes" style={rotateHand(minute, MIN)} />
+            <div className="Clock__minutes" style={rotateHand(minute)} />
             <div className="Clock__info">
               <span className="Clock__info__AM-PM">
                 {hour < 12 ? 'AM' : 'PM'}
@@ -226,12 +231,12 @@
           const { time, isAlarmSet } = this.state;
           return (
             <div className="App">
-              <Clock {...time} />
               <AlarmControl
                 setAlarm={this.setAlarm}
                 isAlarmSet={isAlarmSet}
                 deactivateAlarm={this.deactivateAlarm}
               />
+              <Clock {...time} />
             </div>
           );
         }
