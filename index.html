@@ -110,6 +110,7 @@
         render() {
           const { hour, minute } = this.state;
           const { setAlarm, isAlarmSet } = this.props;
+          const buttonColor = isAlarmSet ? '#28a228' : '#d50000';
           return (
             <div className="AlarmControl">
               <div className="AlarmControl__options">
@@ -119,19 +120,25 @@
               </div>
               <div className="AlarmControl__set">
                 <button
-                  className="AlarmControl__set-alarm fas fa-bell"
-                  onClick={this.onSubmitSetAlarm}>
-                  <span className="AlarmControl__set-alarm__text">
+                  className="AlarmControl__set-alarm "
+                  onClick={this.onSubmitSetAlarm}
+                  style={{
+                    border: `3px solid ${buttonColor}`,
+                  }}>
+                  <i className="AlarmControl__bell fas fa-bell" />
+                  <p
+                    className="AlarmControl__set-alarm__text"
+                    style={{
+                      color: buttonColor,
+                    }}>
                     {isAlarmSet ? 'ON' : 'OFF'}
-                  </span>
+                  </p>
                 </button>
               </div>
             </div>
           );
         }
       }
-
-      const [SEC, MIN, HR] = [60, 60, 12];
 
       const sweepWait = val => (val === 59 ? 58.5 : val);
 
@@ -167,8 +174,12 @@
                   {hour < 12 ? 'AM' : 'PM'}
                 </span>
                 <span
-                  className={`Clock__info__alarm ${!isAlarmSet &&
-                    'fas fa-bell'}`}
+                  className={`Clock__info__alarm fas fa-bell${
+                    !isAlarmSet ? '-slash' : ''
+                  }`}
+                  style={{
+                    color: isAlarmSet ? '#28a228' : '#d50000',
+                  }}
                 />
               </div>
               <div className="Clock__info__data">
