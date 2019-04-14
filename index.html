@@ -39,7 +39,7 @@
        *  is going off
        **/
 
-      const AlarmMessage = ({ hour, minute }) => {
+      const AlarmMessage = ({ hour, minute, second }) => {
         const hourVal = getRelativeHour(hour);
         return (
           <div className="AlarmMessage">
@@ -50,26 +50,14 @@
             <small className="AlarmMessage__warning">
               (Click anywhere on the page to turn off the alarm.)
             </small>
-            <p className="AlarmMessage__notice">{`${hourVal}:${minute} ${
-              hour > 11 ? 'pm' : 'am'
+            <p className="AlarmMessage__notice">{`${hourVal}:${
+              minute < 10 ? '0' : ''
+            }${minute}:${second < 10 ? '0' : ''}${second} ${
+              hour > 11 ? 'PM' : 'AM'
             }`}</p>
           </div>
         );
       };
-
-      /*/
-       * (ControlButton) component
-       * helper component used to help DRY up the FA icon buttons
-       **/
-
-      const ControlButton = ({ onClick, up }) => (
-        <button
-          className={`AlarmControl__btn fas fa-caret-square-${
-            !up ? 'down' : 'up'
-          }`}
-          onClick={onClick}
-        />
-      );
 
       /**
        * (ControlOption) component
@@ -79,9 +67,15 @@
 
       const ControlOption = ({ down, up, value }) => (
         <div className="AlarmControl__option">
-          <ControlButton onClick={up} up />
+          <button
+            className={'AlarmControl__btn fas fa-caret-square-up'}
+            onClick={up}
+          />
           <div className="AlarmControl__val">{value}</div>
-          <ControlButton onClick={down} />
+          <button
+            className={'AlarmControl__btn fas fa-caret-square-down'}
+            onClick={down}
+          />
         </div>
       );
 
@@ -101,12 +95,13 @@
          * */
         constructor(props) {
           super(props);
-          const { initialHour, initialMinute } = props;
+          const { hour, minute, second } = props.initial;
           this.state = {
             buttonHovered: false,
-            hour: initialHour,
-            minute: initialMinute,
-            pm: initialHour > 11,
+            hour,
+            minute,
+            second,
+            pm: hour > 11,
           };
         }
 
@@ -133,12 +128,12 @@
           }, deactivateAlarm);
         };
 
-        onChangeMinute = inc => {
+        onChangeMinuteOrSecond = (valueType, inc) => {
           const { deactivateAlarm } = this.props;
-          this.setState(({ minute }) => {
-            const result = (60 + (minute + inc)) % 60;
+          this.setState(state => {
+            const result = (60 + (state[valueType] + inc)) % 60;
             return {
-              minute: result,
+              [valueType]: result,
             };
           }, deactivateAlarm);
         };
@@ -150,8 +145,8 @@
 
         onSubmitSetAlarm = () => {
           const { setAlarm } = this.props;
-          const { hour, minute, pm } = this.state;
-          setAlarm({ hour: !pm ? hour : hour + 12, minute });
+          const { hour, minute, pm, second } = this.state;
+          setAlarm({ hour: !pm ? hour : hour + 12, minute, second });
         };
 
         /**
@@ -209,7 +204,7 @@
          **/
 
         render() {
-          const { hour, minute, pm } = this.state;
+          const { hour, minute, pm, second } = this.state;
           const { isAlarmSet, setAlarm } = this.props;
 
           return (
@@ -218,17 +213,22 @@
                 <ControlOption
                   down={() => this.onChangeHour(-1)}
                   up={() => this.onChangeHour(1)}
-                  value={`${getRelativeHour(hour)}:`}
+                  value={`${getRelativeHour(hour)} :`}
                 />
                 <ControlOption
-                  down={() => this.onChangeMinute(-1)}
-                  up={() => this.onChangeMinute(1)}
+                  down={() => this.onChangeMinuteOrSecond('minute', -1)}
+                  up={() => this.onChangeMinuteOrSecond('minute', 1)}
                   value={`${minute < 10 ? '0' : ''}${minute}`}
+                />
+                <ControlOption
+                  down={() => this.onChangeMinuteOrSecond('second', -1)}
+                  up={() => this.onChangeMinuteOrSecond('second', 1)}
+                  value={`${second < 10 ? '0' : ''}${second} s`}
                 />
                 <ControlOption
                   down={this.onToggleAmPm}
                   up={this.onToggleAmPm}
-                  value={(pm && 'PM') || 'AM'}
+                  value={!pm ? 'AM' : 'PM'}
                 />
               </div>
               {this.renderButton()}
@@ -347,7 +347,7 @@
       const compareTime = (time, alarm) =>
         time.hour === alarm.hour &&
         time.minute === alarm.minute &&
-        time.second === 0;
+        time.second === alarm.second;
 
       /**
        * (App) Component
@@ -359,6 +359,7 @@
           alarm: {
             hour: null,
             minute: null,
+            second: null,
           },
           isAlarmSet: false,
           isAlarmGoingOff: false,
@@ -416,11 +417,12 @@
           }
         };
 
-        setAlarm = ({ hour, minute }) => {
+        setAlarm = ({ hour, minute, second }) => {
           this.setState(({ isAlarmSet }) => ({
             alarm: {
               hour,
               minute,
+              second,
             },
             isAlarmSet: !isAlarmSet,
           }));
@@ -440,8 +442,7 @@
           return !isAlarmGoingOff ? (
             <div className="AlarmClock">
               <AlarmControl
-                initialMinute={time.minute}
-                initialHour={time.hour}
+                initial={time}
                 setAlarm={this.setAlarm}
                 isAlarmSet={isAlarmSet}
                 deactivateAlarm={this.deactivateAlarm}
@@ -449,7 +450,11 @@
               <Clock time={time} isAlarmSet={isAlarmSet} />
             </div>
           ) : (
-            <AlarmMessage hour={time.hour} minute={time.minute} />
+            <AlarmMessage
+              hour={time.hour}
+              minute={time.minute}
+              second={time.second}
+            />
           );
         }
       }

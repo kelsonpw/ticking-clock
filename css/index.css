@@ -110,7 +110,7 @@ body {
 .AlarmControl__options {
   display: grid;
   place-content: end;
-  grid-template-columns: repeat(3, 150px);
+  grid-template-columns: repeat(4, 112px);
 }
 
 .AlarmControl__option,
@@ -147,8 +147,8 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  margin-right: 60px;
-  margin-left: 60px;
+  margin-right: 40px;
+  margin-left: 40px;
   margin-top: 25px;
 }
 
