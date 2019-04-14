@@ -125,7 +125,14 @@
                   style={{
                     border: `3px solid ${buttonColor}`,
                   }}>
-                  <i className="AlarmControl__bell fas fa-bell" />
+                  <i
+                    className={`AlarmControl__bell fas fa-bell${
+                      !isAlarmSet ? '-slash' : ''
+                    }`}
+                    style={{
+                      color: isAlarmSet ? '#28a228' : '#d50000',
+                    }}
+                  />
                   <p
                     className="AlarmControl__set-alarm__text"
                     style={{
