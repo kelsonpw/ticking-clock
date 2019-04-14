@@ -57,13 +57,26 @@
         />
       );
 
+      const ControlOption = ({ up, down, value }) => (
+        <div className="AlarmControl__option">
+          <ControlButton onClick={up} up />
+          <div className="AlarmControl__val">{value}</div>
+          <ControlButton onClick={down} />
+        </div>
+      );
+
       class AlarmControl extends React.Component {
-        state = {
-          hour: 0,
-          minute: 0,
-          pm: false,
-          buttonHovered: false,
-        };
+        constructor(props) {
+          super(props);
+          const { initialHour, initialMinute } = props;
+          const pm = initialHour > 11;
+          this.state = {
+            hour: initialHour,
+            minute: initialMinute,
+            pm,
+            buttonHovered: false,
+          };
+        }
 
         hover = () => this.setState({ buttonHovered: true });
         unhover = () => this.setState({ buttonHovered: false });
@@ -99,42 +112,6 @@
           setAlarm({ hour: !pm ? hour : hour + 12, minute });
         };
 
-        renderHour() {
-          const { hour } = this.state;
-          const hourVal = getRelativeHour(hour);
-          return (
-            <div className="AlarmControl__option">
-              <ControlButton onClick={() => this.onChangeHour(1)} up />
-              <div className="AlarmControl__val">{`${hourVal}:`}</div>
-              <ControlButton onClick={() => this.onChangeHour(-1)} />
-            </div>
-          );
-        }
-
-        renderMinute() {
-          const { minute } = this.state;
-          const minuteVal = `${minute < 10 ? '0' : ''}${minute}`;
-          return (
-            <div className="AlarmControl__option">
-              <ControlButton onClick={() => this.onChangeMinute(1)} up />
-              <div className="AlarmControl__val">{minuteVal}</div>
-              <ControlButton onClick={() => this.onChangeMinute(-1)} />
-            </div>
-          );
-        }
-
-        renderAmPm() {
-          const { pm } = this.state;
-
-          return (
-            <div className="AlarmControl__option">
-              <ControlButton onClick={this.onToggleAmPm} up />
-              <div className="AlarmControl__val">{(pm && 'PM') || 'AM'}</div>
-              <ControlButton onClick={this.onToggleAmPm} />
-            </div>
-          );
-        }
-
         renderButton = () => {
           const { buttonHovered } = this.state;
           const { isAlarmSet } = this.props;
@@ -146,6 +123,9 @@
             border: `3px solid ${buttonColor}`,
             backgroundColor: buttonHovered && buttonColor,
           };
+          const alarmIconClass = `AlarmControl__bell fas fa-bell${
+            !isAlarmSet ? '-slash' : ''
+          }`;
           return (
             <div className="AlarmControl__set">
               <button
@@ -157,12 +137,7 @@
                 onMouseEnter={this.hover}
                 onMouseLeave={this.unhover}
                 style={buttonStyle}>
-                <i
-                  className={`AlarmControl__bell fas fa-bell${
-                    !isAlarmSet ? '-slash' : ''
-                  }`}
-                  style={textStyle}
-                />
+                <i className={alarmIconClass} style={textStyle} />
                 <p className="AlarmControl__set-alarm__text" style={textStyle}>
                   {isAlarmSet ? 'ON' : 'OFF'}
                 </p>
@@ -172,20 +147,37 @@
         };
 
         render() {
-          const { hour, minute } = this.state;
+          const { hour, minute, pm } = this.state;
           const { setAlarm, isAlarmSet } = this.props;
+
           return (
             <div className="AlarmControl">
               <div className="AlarmControl__options">
-                {this.renderHour()}
-                {this.renderMinute()}
-                {this.renderAmPm()}
+                <ControlOption
+                  upClick={() => this.onChangeHour(1)}
+                  downClick={() => this.onChangeHour(-1)}
+                  value={`${getRelativeHour(hour)}:`}
+                />
+                <ControlOption
+                  up={() => this.onChangeMinute(1)}
+                  down={() => this.onChangeMinute(-1)}
+                  value={`${minute < 10 ? '0' : ''}${minute}`}
+                />
+                <ControlOption
+                  up={this.onToggleAmPm}
+                  down={this.onToggleAmPm}
+                  value={(pm && 'PM') || 'AM'}
+                />
               </div>
               {this.renderButton()}
             </div>
           );
         }
       }
+
+      /**
+       * Pure helper functions (Clock component)
+       * */
 
       const sweepWait = val => (val === 59 ? 58.5 : val);
 
@@ -239,6 +231,14 @@
         </div>
       );
 
+      /**
+       * External helper methods (used in App)
+       * These are external pieces of business logic
+       * unrelated to this component's implementation
+       * I would probably use a helper library, i.e Moment
+       * in production code to handle this.
+       * */
+
       const getCurrentTime = () => {
         const date = new Date();
         return {
@@ -257,6 +257,9 @@
         time.second === 0;
 
       class App extends React.Component {
+        /**
+         * State (App)
+         * */
         initialAlarmState = {
           alarm: {
             hour: null,
@@ -270,6 +273,10 @@
           time: getCurrentTime(),
           ...this.initialAlarmState,
         };
+
+        /**
+         * React Lifecycle methods (App)
+         * */
 
         componentDidMount() {
           this.tick();
@@ -287,6 +294,10 @@
         componentWillUnmount() {
           clearInterval(this.interval);
         }
+
+        /**
+         * Event Listeners/Click handlers/instance methods (App)
+         * */
 
         tick = () => {
           this.interval = setInterval(() => {
@@ -322,11 +333,17 @@
           this.setState({ ...this.initialAlarmState });
         };
 
+        /**
+         * Render method (App)
+         * */
+
         render() {
           const { time, isAlarmSet, isAlarmGoingOff } = this.state;
           return !isAlarmGoingOff ? (
             <div className="AlarmClock">
               <AlarmControl
+                initialMinute={time.minute}
+                initialHour={time.hour}
                 setAlarm={this.setAlarm}
                 isAlarmSet={isAlarmSet}
                 deactivateAlarm={this.deactivateAlarm}
