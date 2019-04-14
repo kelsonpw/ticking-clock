@@ -10,10 +10,12 @@
     />
     <link rel="stylesheet" media="all" href="css/index.css" />
     <link
-      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      media="all"
       rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
     />
+
     <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
@@ -21,28 +23,52 @@
   <body>
     <div id="app"></div>
     <script type="text/babel" data-presets="react">
+      const ControlButton = ({ onClick, up }) => {
+        const iconType = !up ? 'down' : 'up';
+        return (
+          <button
+            className={`AlarmControl__btn fas fa-caret-square-${iconType}`}
+            onClick={onClick}
+          />
+        );
+      };
+
       class AlarmControl extends React.Component {
         state = {
           hour: 0,
           minute: 0,
+          pm: false,
         };
 
         onChangeHour = inc => {
+          const { deactivateAlarm } = this.props;
           this.setState(({ hour }) => {
-            const result = (24 + (hour + inc)) % 24;
+            const result = (12 + (hour + inc)) % 12;
             return {
               hour: result,
             };
-          });
+          }, deactivateAlarm);
         };
 
         onChangeMinute = inc => {
+          const { deactivateAlarm } = this.props;
           this.setState(({ minute }) => {
             const result = (60 + (minute + inc)) % 60;
             return {
               minute: result,
             };
-          });
+          }, deactivateAlarm);
+        };
+
+        onToggleAmPm = () => {
+          const { deactivateAlarm } = this.props;
+          this.setState(({ pm }) => ({ pm: !pm }), deactivateAlarm);
+        };
+
+        onSubmitSetAlarm = () => {
+          const { setAlarm } = this.props;
+          const { hour, minute, pm } = this.state;
+          setAlarm({ hour: !pm ? hour : hour + 12, minute });
         };
 
         renderHour() {
@@ -50,18 +76,10 @@
           const relativeHour = hour % 12;
           const hourVal = `${relativeHour === 0 ? 12 : relativeHour}:`;
           return (
-            <div className="AlarmControl__hour">
-              <button
-                className="AlarmControl__hour__up"
-                onClick={() => this.onChangeHour(1)}>
-                up
-              </button>
-              <div className="AlarmControl__hour__val">{hourVal}</div>
-              <button
-                className="AlarmControl__hour__down"
-                onClick={() => this.onChangeHour(-1)}>
-                down
-              </button>
+            <div className="AlarmControl__option">
+              <ControlButton onClick={() => this.onChangeHour(1)} up />
+              <div className="AlarmControl__val">{hourVal}</div>
+              <ControlButton onClick={() => this.onChangeHour(-1)} />
             </div>
           );
         }
@@ -70,18 +88,22 @@
           const { minute } = this.state;
           const minuteVal = `${minute < 10 ? '0' : ''}${minute}`;
           return (
-            <div className="AlarmControl__minute">
-              <button
-                className="AlarmControl__minute__up"
-                onClick={() => this.onChangeMinute(1)}>
-                up
-              </button>
-              <div className="AlarmControl__minute__val">{minuteVal}</div>
-              <button
-                className="AlarmControl__hour__down"
-                onClick={() => this.onChangeMinute(-1)}>
-                down
-              </button>
+            <div className="AlarmControl__option">
+              <ControlButton onClick={() => this.onChangeMinute(1)} up />
+              <div className="AlarmControl__val">{minuteVal}</div>
+              <ControlButton onClick={() => this.onChangeMinute(-1)} />
+            </div>
+          );
+        }
+
+        renderAmPm() {
+          const { pm } = this.state;
+
+          return (
+            <div className="AlarmControl__option">
+              <ControlButton onClick={this.onToggleAmPm} up />
+              <div className="AlarmControl__val">{(pm && 'PM') || 'AM'}</div>
+              <ControlButton onClick={this.onToggleAmPm} />
             </div>
           );
         }
@@ -93,12 +115,10 @@
             <div className="AlarmControl">
               {this.renderHour()}
               {this.renderMinute()}
-              <div className="AlarmControl__AM-PM">
-                {hour < 11 ? 'AM' : 'PM'}
-              </div>
+              {this.renderAmPm()}
               <button
                 className="AlarmControl__set-alarm"
-                onClick={() => setAlarm({ hour, minute })}>
+                onClick={this.onSubmitSetAlarm}>
                 {isAlarmSet ? 'SET' : 'NOT set'}
               </button>
             </div>
@@ -152,13 +172,17 @@
         time.second === 0;
 
       class App extends React.Component {
-        state = {
-          time: getCurrentTime(),
+        initialAlarmState = {
           alarm: {
             hour: null,
             minute: null,
           },
           isAlarmSet: false,
+        };
+
+        state = {
+          time: getCurrentTime(),
+          ...this.initialAlarmState,
         };
 
         componentDidMount() {
@@ -190,6 +214,10 @@
           }));
         };
 
+        deactivateAlarm = () => {
+          this.setState({ ...this.initialAlarmState });
+        };
+
         componentWillUnmount() {
           clearInterval(this.interval);
         }
@@ -199,7 +227,11 @@
           return (
             <div className="App">
               <Clock {...time} />
-              <AlarmControl setAlarm={this.setAlarm} isAlarmSet={isAlarmSet} />
+              <AlarmControl
+                setAlarm={this.setAlarm}
+                isAlarmSet={isAlarmSet}
+                deactivateAlarm={this.deactivateAlarm}
+              />
             </div>
           );
         }

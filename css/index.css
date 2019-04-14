@@ -1,3 +1,5 @@
+@import url('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
 @import url('https://fonts.googleapis.com/css?family=Fredoka+One');
 
 .App {
@@ -65,13 +67,27 @@
 .AlarmControl {
   display: grid;
   grid-template-columns: repeat(3, 150px);
+  grid-template-rows: repeat(2, 1fr);
 }
 
-.AlarmControl__hour,
-.AlarmControl__minute,
+.AlarmControl__option,
 .AlarmControl__AM-PM {
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
+}
+
+.AlarmControl__btn {
+  border: 0;
+  padding: 20px;
+  margin: 0;
+  font-size: 30px;
+  outline: none;
+  cursor: pointer;
+}
+
+.AlarmControl__val {
+  font-family: 'Fredoka One', cursive;
+  font-size: 25px;
 }
