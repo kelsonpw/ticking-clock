@@ -191,8 +191,8 @@ body {
   background-color: #d50000;
   color: #fff;
   display: flex;
-  flex: 1;
   flex-direction: column;
+  flex: 1;
   height: 100vh;
   justify-content: center;
 }
@@ -211,4 +211,8 @@ body {
 
 .alarm-no-set {
   color: #d50000;
+}
+
+.Alarm__alert__audio {
+  background-color: #d50000;
 }

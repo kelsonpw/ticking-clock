@@ -55,6 +55,14 @@
               }${minute}:${second < 10 ? '0' : ''}${second} ${
                 hour > 11 ? 'PM' : 'AM'
               }`}</p>
+              <audio
+                autoPlay
+                className="Alarm__alert__audio"
+                controls
+                src="./assets/newbeginning.mp3"
+                type="audio/mpeg"
+                volume={0.3}
+              />
             </div>
           );
         };
@@ -100,7 +108,7 @@
               hour: hour % 12,
               minute,
               pm: hour > 11,
-              second,
+              second: (second + 30) % 60,
             };
           }
 
@@ -119,12 +127,12 @@
             }, deactivateAlarm);
           };
 
-          onChangeMinuteOrSecond = (valueType, inc) => {
+          onChangeMinuteOrSecond = (minOrSecond, inc) => {
             const { deactivateAlarm } = this.props;
-            this.setState(state => {
-              const result = (60 + (state[valueType] + inc)) % 60;
+            this.setState(prevState => {
+              const result = (60 + (prevState[minOrSecond] + inc)) % 60;
               return {
-                [valueType]: result,
+                [minOrSecond]: result,
               };
             }, deactivateAlarm);
           };
@@ -147,26 +155,19 @@
 
           renderButton = () => {
             const { isAlarmSet } = this.props;
-            const alarmIconClass = `fas fa-bell${!isAlarmSet ? '-slash' : ''}`;
-
+            const isAlarmSetClass = isAlarmSet ? 'alarm-set' : 'alarm-no-set';
             return (
               <div className="AlarmControl__set">
                 <button
-                  className={`AlarmControl__set-button__button ${
-                    isAlarmSet ? 'alarm-set' : 'alarm-no-set'
-                  }`}
+                  className={`AlarmControl__set-button__button ${isAlarmSetClass}`}
                   onClick={this.onSubmitSetAlarm}>
                   <i
-                    className={
-                      `AlarmControl__set-button__text ${
-                        isAlarmSet ? 'alarm-set' : 'alarm-no-set'
-                      } ` + alarmIconClass
-                    }
+                    className={`AlarmControl__set-button__text fas fa-bell${(isAlarmSet
+                      ? '-slash '
+                      : ' ') + isAlarmSetClass}`}
                   />
                   <p
-                    className={`AlarmControl__set-button__text ${
-                      isAlarmSet ? 'alarm-set' : 'alarm-no-set'
-                    }`}>
+                    className={`AlarmControl__set-button__text ${isAlarmSetClass}`}>
                     {isAlarmSet ? 'ON' : 'OFF'}
                   </p>
                 </button>
@@ -339,6 +340,7 @@
             ...this.initialAlarmState,
           };
 
+          alertAudioRef = React.createRef();
           /**
            * Life-cycle methods
            * (App) Component
