@@ -38,34 +38,31 @@
          *  is going off
          **/
 
-        const AlarmMessage = ({ hour, minute, second }) => {
-          const hourVal = getRelativeHour(hour);
-          return (
-            <div className="AlarmMessage">
-              <h1 className="AlarmMessage__header">BUZZ BUZZ!</h1>
-              <h3 className="AlarmMessage__notice">
-                {`Your alarm went off, let's go!`}
-              </h3>
-              <small>
-                (Click anywhere on the page or press any key to turn off the
-                alarm.)
-              </small>
-              <p className="AlarmMessage__notice">{`${hourVal}:${
-                minute < 10 ? '0' : ''
-              }${minute}:${second < 10 ? '0' : ''}${second} ${
-                hour > 11 ? 'PM' : 'AM'
-              }`}</p>
-              <audio
-                autoPlay
-                className="Alarm__alert__audio"
-                controls
-                src="./assets/newbeginning.mp3"
-                type="audio/mpeg"
-                volume={0.3}
-              />
-            </div>
-          );
-        };
+        const AlarmMessage = ({ hour, minute, second }) => (
+          <div className="AlarmMessage">
+            <h1 className="AlarmMessage__header">BUZZ BUZZ!</h1>
+            <h3 className="AlarmMessage__notice">
+              {`Your alarm went off, let's go!`}
+            </h3>
+            <small>
+              (Click anywhere on the page or press any key to turn off the
+              alarm.)
+            </small>
+            <p className="AlarmMessage__notice">{`${getRelativeHour(hour)}:${
+              minute < 10 ? '0' : ''
+            }${minute}:${second < 10 ? '0' : ''}${second} ${
+              hour > 11 ? 'PM' : 'AM'
+            }`}</p>
+            <audio
+              autoPlay
+              className="Alarm__alert__audio"
+              controls
+              src="./assets/newbeginning.mp3"
+              type="audio/mpeg"
+              volume={0.3}
+            />
+          </div>
+        );
 
         /**
          * (ControlOption) component
