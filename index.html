@@ -27,11 +27,8 @@
          * Global (shared by multiple components) helper functions
          * used in (AlarmControls) (Clock)
          * */
-        const getRelativeHour = hour => {
-          const relativeHour = hour % 12;
-          return relativeHour === 0 ? 12 : relativeHour;
-        };
-
+        const getRelativeHour = hour => hour % 12 || 12;
+        const formatUnit = value => `${value < 10 ? '0' : ''}${value}`;
         /*/
          * (AlarmMessage) component
          * full page component used only when the alarm
@@ -48,9 +45,9 @@
               (Click anywhere on the page or press any key to turn off the
               alarm.)
             </small>
-            <p className="AlarmMessage__notice">{`${getRelativeHour(hour)}:${
-              minute < 10 ? '0' : ''
-            }${minute}:${second < 10 ? '0' : ''}${second} ${
+            <p className="AlarmMessage__notice">{`${getRelativeHour(
+              hour
+            )}:${formatUnit(minute)}:${formatUnit(second)} ${
               hour > 11 ? 'PM' : 'AM'
             }`}</p>
             <audio
@@ -192,12 +189,12 @@
                   <ControlOption
                     down={() => this.onChangeMinuteOrSecond('minute', -1)}
                     up={() => this.onChangeMinuteOrSecond('minute', 1)}
-                    value={`${minute < 10 ? '0' : ''}${minute}`}
+                    value={formatUnit(minute)}
                   />
                   <ControlOption
                     down={() => this.onChangeMinuteOrSecond('second', -1)}
                     up={() => this.onChangeMinuteOrSecond('second', 1)}
-                    value={`${second < 10 ? '0' : ''}${second} s`}
+                    value={formatUnit(second) + ' s'}
                   />
                   <ControlOption
                     down={this.onToggleAmPm}
@@ -282,8 +279,12 @@
                   />
                 </div>
                 <div className="Clock__info__data">
-                  <span className="Clock__info__text">{time.month + 1}</span>
-                  <span className="Clock__info__text">{time.day}</span>
+                  <span className="Clock__info__text">
+                    {formatUnit(time.month + 1)}
+                  </span>
+                  <span className="Clock__info__text">
+                    {formatUnit(time.day)}
+                  </span>
                   <span className="Clock__info__text">{time.year}</span>
                 </div>
               </div>
