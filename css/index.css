@@ -159,6 +159,24 @@ body {
   width: 100%;
 }
 
+.AlarmControl__set-button__button.alarm-set {
+  border: 3px solid #28a228;
+}
+.AlarmControl__set-button__button:hover.alarm-set {
+  background-color: #28a228;
+}
+
+.AlarmControl__set-button__button.alarm-no-set {
+  border: 3px solid #d50000;
+}
+.AlarmControl__set-button__button:hover.alarm-no-set {
+  background-color: #d50000;
+}
+
+.AlarmControl__set-button__button:hover .AlarmControl__set-button__text {
+  color: white;
+}
+
 .AlarmControl__set-button__text {
   font-size: 25px;
   min-width: 75px;
@@ -185,4 +203,12 @@ body {
 
 .AlarmMessage__notice {
   font-size: 45px;
+}
+
+.alarm-set {
+  color: #28a228;
+}
+
+.alarm-no-set {
+  color: #d50000;
 }

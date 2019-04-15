@@ -23,6 +23,7 @@
       <div id="app"></div>
       <script type="text/babel" data-presets="react">
         /**
+         *
          * Global (shared by multiple components) helper functions
          * used in (AlarmControls) (Clock)
          * */
@@ -45,7 +46,10 @@
               <h3 className="AlarmMessage__notice">
                 {`Your alarm went off, let's go!`}
               </h3>
-              <small>(Click anywhere on the page to turn off the alarm.)</small>
+              <small>
+                (Click anywhere on the page or press any key to turn off the
+                alarm.)
+              </small>
               <p className="AlarmMessage__notice">{`${hourVal}:${
                 minute < 10 ? '0' : ''
               }${minute}:${second < 10 ? '0' : ''}${second} ${
@@ -93,21 +97,12 @@
             super(props);
             const { hour, minute, second } = props.initial;
             this.state = {
-              buttonHovered: false,
               hour: hour % 12,
               minute,
-              second,
               pm: hour > 11,
+              second,
             };
           }
-
-          /**
-           * methods use to set hover state (for styling only)
-           * (AlarmControls)
-           **/
-
-          hover = () => this.setState({ buttonHovered: true });
-          unhover = () => this.setState({ buttonHovered: false });
 
           /**
            * Click handlers
@@ -150,47 +145,28 @@
            * (AlarmControls)
            **/
 
-          createButtonStyles = () => {
-            const { buttonHovered } = this.state;
-            const { isAlarmSet } = this.props;
-            const buttonColor = isAlarmSet ? '#28a228' : '#d50000';
-
-            return {
-              textStyle: {
-                color: !buttonHovered ? buttonColor : 'white',
-              },
-              buttonStyle: {
-                backgroundColor: buttonHovered && buttonColor,
-                border: `3px solid ${buttonColor}`,
-              },
-            };
-          };
-
           renderButton = () => {
-            const { buttonHovered } = this.state;
             const { isAlarmSet } = this.props;
             const alarmIconClass = `fas fa-bell${!isAlarmSet ? '-slash' : ''}`;
-            const { buttonStyle, textStyle } = this.createButtonStyles();
 
             return (
               <div className="AlarmControl__set">
                 <button
-                  className="AlarmControl__set-button__button "
-                  onBlur={this.unhover}
-                  onClick={this.onSubmitSetAlarm}
-                  onFocus={this.hover}
-                  onMouseEnter={this.hover}
-                  onMouseLeave={this.unhover}
-                  style={buttonStyle}>
+                  className={`AlarmControl__set-button__button ${
+                    isAlarmSet ? 'alarm-set' : 'alarm-no-set'
+                  }`}
+                  onClick={this.onSubmitSetAlarm}>
                   <i
                     className={
-                      'AlarmControl__set-button__bell ' + alarmIconClass
+                      `AlarmControl__set-button__text ${
+                        isAlarmSet ? 'alarm-set' : 'alarm-no-set'
+                      } ` + alarmIconClass
                     }
-                    style={textStyle}
                   />
                   <p
-                    className="AlarmControl__set-button__text"
-                    style={textStyle}>
+                    className={`AlarmControl__set-button__text ${
+                      isAlarmSet ? 'alarm-set' : 'alarm-no-set'
+                    }`}>
                     {isAlarmSet ? 'ON' : 'OFF'}
                   </p>
                 </button>
@@ -274,14 +250,6 @@
         };
 
         /**
-         * creates a style object for the alarm indicator icon
-         * (Clock component)
-         */
-        const createIconStyle = isAlarmSet => ({
-          color: isAlarmSet ? '#28a228' : '#d50000',
-        });
-
-        /**
          * Clock component
          * (presentational)
          * implementation does not update itself.
@@ -309,9 +277,10 @@
                   <span
                     className={
                       'Clock__info__alarm ' +
-                      `fas fa-bell${!isAlarmSet ? '-slash' : ''}`
+                      `fas fa-bell${
+                        !isAlarmSet ? '-slash alarm-no-set' : ' alarm-set'
+                      }`
                     }
-                    style={createIconStyle(isAlarmSet)}
                   />
                 </div>
                 <div className="Clock__info__data">
@@ -408,11 +377,13 @@
             if (!isAlarmGoingOff) {
               this.setState({ isAlarmGoingOff: true }, () => {
                 document.addEventListener('click', this.onDetectAlarm);
+                document.addEventListener('keydown', this.onDetectAlarm);
               });
             } else {
               this.setState({ isAlarmGoingOff: false }, () => {
                 this.deactivateAlarm();
                 document.removeEventListener('click', this.onDetectAlarm);
+                document.removeEventListener('keydown', this.onDetectAlarm);
               });
             }
           };
