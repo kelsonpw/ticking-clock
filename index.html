@@ -414,9 +414,10 @@
           setAlarm = ({ hour, minute, second }) => {
             this.setState(({ isAlarmSet }) => ({
               alarm: {
-                hour,
-                minute,
-                second,
+                hour: null,
+                minute: null,
+                second: null,
+                ...(!isAlarmSet && { hour, minute, second }),
               },
               isAlarmSet: !isAlarmSet,
             }));
