@@ -52,7 +52,6 @@
             }`}</p>
             <audio
               autoPlay
-              className="Alarm__alert__audio"
               controls
               src="./assets/newbeginning.mp3"
               type="audio/mpeg"
@@ -409,7 +408,7 @@
 
           render() {
             const { isAlarmGoingOff, isAlarmSet, time } = this.state;
-            return !isAlarmGoingOff ? (
+            return isAlarmGoingOff ? (
               <div className="AlarmClock">
                 <AlarmControl
                   deactivateAlarm={this.deactivateAlarm}
