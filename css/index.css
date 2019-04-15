@@ -196,7 +196,7 @@ body {
   flex-direction: column;
   flex: 1;
   height: 100vh;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .AlarmMessage__header {
@@ -213,4 +213,14 @@ body {
 
 .alarm-no-set {
   color: #d50000;
+}
+
+.AlarmMessage__audio__credits > a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.AlarmMessage__audio__credits > a:hover,
+.AlarmMessage__audio__credits > a:focus {
+  font-size: 18;
 }

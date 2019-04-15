@@ -53,10 +53,15 @@
             <audio
               autoPlay
               controls
-              src="./assets/newbeginning.mp3"
+              src="./assets/bensound-creativeminds.mp3"
               type="audio/mpeg"
               volume={0.3}
             />
+            <small className="AlarmMessage__audio__credits">
+              credits to{' '}
+              <a href="https://www.bensound.com/">https://www.bensound.com/</a>{' '}
+              for the royalty free music
+            </small>
           </div>
         );
 
@@ -408,7 +413,7 @@
 
           render() {
             const { isAlarmGoingOff, isAlarmSet, time } = this.state;
-            return isAlarmGoingOff ? (
+            return !isAlarmGoingOff ? (
               <div className="AlarmClock">
                 <AlarmControl
                   deactivateAlarm={this.deactivateAlarm}
