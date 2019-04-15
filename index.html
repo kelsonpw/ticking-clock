@@ -39,12 +39,12 @@
           // turn audio down for the headphone users
           // this must be set through js unfortunately
           // hooks were useful though, didn't need to convert to class
-          const audioRef = React.useRef();
+          const audioRef = React.useRef(null);
           React.useEffect(() => {
             if (audioRef.current) {
               audioRef.current.volume = 0.2;
             }
-          });
+          }, []);
           return (
             <div className="AlarmMessage">
               <h1 className="AlarmMessage__header">BUZZ BUZZ!</h1>
@@ -426,7 +426,7 @@
 
           render() {
             const { isAlarmGoingOff, isAlarmSet, time } = this.state;
-            return isAlarmGoingOff ? (
+            return !isAlarmGoingOff ? (
               <div className="AlarmClock">
                 <AlarmControl
                   deactivateAlarm={this.deactivateAlarm}
