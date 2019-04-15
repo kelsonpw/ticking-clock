@@ -161,18 +161,21 @@ body {
 .AlarmControl__set-button__button.alarm-set {
   border: 3px solid #28a228;
 }
-.AlarmControl__set-button__button:hover.alarm-set {
+.AlarmControl__set-button__button:hover.alarm-set,
+.AlarmControl__set-button__button:focus.alarm-set {
   background-color: #28a228;
 }
 
 .AlarmControl__set-button__button.alarm-no-set {
   border: 3px solid #d50000;
 }
-.AlarmControl__set-button__button:hover.alarm-no-set {
+.AlarmControl__set-button__button:hover.alarm-no-set,
+.AlarmControl__set-button__button:focus.alarm-no-set {
   background-color: #d50000;
 }
 
-.AlarmControl__set-button__button:hover .AlarmControl__set-button__text {
+.AlarmControl__set-button__button:hover .AlarmControl__set-button__text,
+.AlarmControl__set-button__button:focus .AlarmControl__set-button__text {
   color: #fff;
 }
 
