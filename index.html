@@ -35,35 +35,47 @@
          *  is going off
          **/
 
-        const AlarmMessage = ({ hour, minute, second }) => (
-          <div className="AlarmMessage">
-            <h1 className="AlarmMessage__header">BUZZ BUZZ!</h1>
-            <h3 className="AlarmMessage__notice">
-              {`Your alarm went off, let's go!`}
-            </h3>
-            <small>
-              (Click anywhere on the page or press any key to turn off the
-              alarm.)
-            </small>
-            <p className="AlarmMessage__notice">{`${getRelativeHour(
-              hour
-            )}:${formatUnit(minute)}:${formatUnit(second)} ${
-              hour > 11 ? 'PM' : 'AM'
-            }`}</p>
-            <audio
-              autoPlay
-              controls
-              src="./assets/bensound-creativeminds.mp3"
-              type="audio/mpeg"
-              volume={0.3}
-            />
-            <small className="AlarmMessage__audio__credits">
-              credits to{' '}
-              <a href="https://www.bensound.com/">https://www.bensound.com/</a>{' '}
-              for the royalty free music
-            </small>
-          </div>
-        );
+        const AlarmMessage = ({ hour, minute, second }) => {
+          // turn audio down for the headphone users
+          const audioRef = React.useRef();
+          React.useEffect(() => {
+            if (audioRef.current) {
+              audioRef.current.volume = 0.2;
+            }
+          });
+          return (
+            <div className="AlarmMessage">
+              <h1 className="AlarmMessage__header">BUZZ BUZZ!</h1>
+              <h3 className="AlarmMessage__notice">
+                {`Your alarm went off, let's go!`}
+              </h3>
+              <small>
+                (Click anywhere on the page or press any key to turn off the
+                alarm.)
+              </small>
+              <p className="AlarmMessage__notice">{`${getRelativeHour(
+                hour
+              )}:${formatUnit(minute)}:${formatUnit(second)} ${
+                hour > 11 ? 'PM' : 'AM'
+              }`}</p>
+              <audio
+                ref={audioRef}
+                autoPlay
+                controls
+                src="./assets/bensound-creativeminds.mp3"
+                type="audio/mpeg"
+                volume={0.05}
+              />
+              <small className="AlarmMessage__audio__credits">
+                credits to{' '}
+                <a href="https://www.bensound.com/">
+                  https://www.bensound.com/
+                </a>{' '}
+                for the royalty free music
+              </small>
+            </div>
+          );
+        };
 
         /**
          * (ControlOption) component
@@ -413,7 +425,7 @@
 
           render() {
             const { isAlarmGoingOff, isAlarmSet, time } = this.state;
-            return !isAlarmGoingOff ? (
+            return isAlarmGoingOff ? (
               <div className="AlarmClock">
                 <AlarmControl
                   deactivateAlarm={this.deactivateAlarm}
