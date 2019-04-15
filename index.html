@@ -42,7 +42,7 @@
           const audioRef = React.useRef(null);
           React.useEffect(() => {
             if (audioRef.current) {
-              audioRef.current.volume = 0.2;
+              audioRef.current.volume = 1 / 3;
             }
           }, []);
           return (
