@@ -132,9 +132,8 @@ body {
 
 .AlarmControl__option__btn:hover,
 .AlarmControl__option__btn:focus {
-  font-size: 34px;
-  text-shadow: -1px -1px 0 #002e63, 1px -1px 0 #002e63, -1px 1px 0 #002e63,
-    1px 1px 0 #002e63;
+  text-shadow: -3px -3px 0 #a9a9a9, 3px -3px 0 #a9a9a9, -3px 3px 0 #a9a9a9,
+    3px 3px 0 #a9a9a9;
 }
 
 .AlarmControl__option__value {
