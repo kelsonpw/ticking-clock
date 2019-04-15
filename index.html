@@ -22,6 +22,45 @@
     <div id="app"></div>
     <script type="text/babel" data-presets="react">
       /**
+       *
+       * Clock Helpers
+       *
+       * */
+
+      const sweepIfEndOfMinute = val => (val === 59 ? 58.5 : val);
+
+      const rotateHand = (val, arcs) => ({
+        transform: `rotate(${(val / arcs) * 360}deg)`,
+      });
+
+      /**
+       *
+       * Clock Component
+       *
+       * */
+
+      const Clock = ({ seconds, minutes, hours }) => (
+        <div className="Clock__container">
+          <div className="Clock">
+            <div
+              className="Clock__seconds"
+              style={rotateHand(sweepIfEndOfMinute(seconds), 60)}
+            />
+            <div
+              className="Clock__hours"
+              style={rotateHand(hours + minutes / 60, 12)}
+            />
+            <div className="Clock__minutes" style={rotateHand(minutes, 60)} />
+            <div className="Clock__info">
+              <span className="Clock__info__AM-PM">
+                {hours < 12 ? 'AM' : 'PM'}
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+
+      /**
        * App Helpers
        *
        * */
@@ -65,45 +104,6 @@
           );
         }
       }
-
-      /**
-       *
-       * Clock Helpers
-       *
-       * */
-
-      const sweepIfEndOfMinute = val => (val === 59 ? 58.5 : val);
-
-      const rotateHand = (val, arcs) => ({
-        transform: `rotate(${(val / arcs) * 360}deg)`,
-      });
-
-      /**
-       *
-       * Clock Component
-       *
-       * */
-
-      const Clock = ({ seconds, minutes, hours }) => (
-        <div className="Clock__container">
-          <div className="Clock">
-            <div
-              className="Clock__seconds"
-              style={rotateHand(sweepIfEndOfMinute(seconds), 60)}
-            />
-            <div
-              className="Clock__hours"
-              style={rotateHand(hours + minutes / 60, 12)}
-            />
-            <div className="Clock__minutes" style={rotateHand(minutes, 60)} />
-            <div className="Clock__info">
-              <span className="Clock__info__AM-PM">
-                {hours < 12 ? 'AM' : 'PM'}
-              </span>
-            </div>
-          </div>
-        </div>
-      );
 
       ReactDOM.render(<App />, document.getElementById('app'));
     </script>
