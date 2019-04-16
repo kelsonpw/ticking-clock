@@ -279,6 +279,7 @@
           <div className="Clock">
             <div
               className="Clock__seconds"
+
               style={rotateHand(sweepWait(time.second))}
             />
             <div
@@ -315,6 +316,7 @@
       );
 
       /**
+
        * External helper methods (used in App)
        * These are external pieces of business logic
        * unrelated to this component's implementation
@@ -333,6 +335,7 @@
           year: date.getFullYear(),
         };
       };
+
 
       const compareTime = (time, alarm) =>
         time.hour === alarm.hour &&
