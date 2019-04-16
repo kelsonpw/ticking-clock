@@ -1,16 +1,24 @@
-@import url('https://fonts.googleapis.com/css?family=Fredoka+One');
+@import 'https://fonts.googleapis.com/css?family=Fredoka+One';
 
-.App {
+body {
+  font-family: 'Fredoka One', cursive;
+  margin: 0;
+  padding: 0;
+}
+
+.AlarmClock {
   display: grid;
-  height: 100vh;
-  place-content: center;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 50px;
+  justify-items: center;
+  margin: 60px 50px 100px 0;
 }
 
 .Clock__container {
+  border: 45px solid #000;
   border-radius: 50%;
-  border: 25px solid #000;
-  display: inline-flex;
-  padding: 15px;
+  margin-right: 10px;
+  padding: 20px;
 }
 
 .Clock {
@@ -18,6 +26,7 @@
   height: 600px;
   list-style: none;
   margin: auto;
+  padding: 0;
   position: relative;
   width: 600px;
 }
@@ -28,7 +37,7 @@
   height: 600px;
   left: 285px;
   position: absolute;
-  top: 0px;
+  top: 0;
   width: 30px;
 }
 
@@ -48,16 +57,171 @@
 }
 
 .Clock__info {
-  border-radius: 5px;
   border: 1.5px solid #000;
+  border-radius: 5px;
   display: grid;
-  left: 370px;
+  grid-template-rows: repeat(2, 1fr);
+  left: 340px;
   place-content: center;
   position: absolute;
-  top: 280px;
+  top: 260px;
 }
 
 .Clock__info__AM-PM {
-  font-family: 'Fredoka One', cursive;
-  padding: 10px 50px;
+  border-right: 1.5px solid #000;
+  flex: 1;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.Clock__info__data {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.Clock__info__alarm {
+  flex: 1;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.Clock__info__text {
+  border-top: 1.5px solid #000;
+  flex: 1;
+  padding: 8px 12px;
+  text-align: center;
+  width: 30px;
+}
+
+.Clock__info__text:first-child {
+  border-right: 1.5px solid #000;
+}
+
+.Clock__info__text:last-child {
+  border-left: 1.5px solid #000;
+}
+
+.AlarmControl {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+.AlarmControl__options {
+  display: grid;
+  grid-template-columns: repeat(4, 112px);
+  place-content: end;
+}
+
+.AlarmControl__option,
+.AlarmControl__AM-PM {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.AlarmControl__option__btn,
+.AlarmControl__set-button__button {
+  border: 0;
+  cursor: pointer;
+  font-size: 30px;
+  margin: 0;
+  outline: none;
+  padding: 10px;
+}
+
+.AlarmControl__option__btn:hover,
+.AlarmControl__option__btn:focus {
+  text-shadow: -3px -3px 0 #a9a9a9, 3px -3px 0 #a9a9a9, -3px 3px 0 #a9a9a9,
+    3px 3px 0 #a9a9a9;
+}
+
+.AlarmControl__option__value {
+  font-size: 25px;
+}
+
+.AlarmControl__set-button {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-left: 40px;
+  margin-right: 40px;
+  margin-top: 25px;
+}
+
+.AlarmControl__set-button__button {
+  align-items: center;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.AlarmControl__set-button__button.alarm-set {
+  border: 3px solid #28a228;
+}
+.AlarmControl__set-button__button:hover.alarm-set,
+.AlarmControl__set-button__button:focus.alarm-set {
+  background-color: #28a228;
+}
+
+.AlarmControl__set-button__button.alarm-no-set {
+  border: 3px solid #d50000;
+}
+.AlarmControl__set-button__button:hover.alarm-no-set,
+.AlarmControl__set-button__button:focus.alarm-no-set {
+  background-color: #d50000;
+}
+
+.AlarmControl__set-button__button:hover .AlarmControl__set-button__text,
+.AlarmControl__set-button__button:focus .AlarmControl__set-button__text {
+  color: #fff;
+}
+
+.AlarmControl__set-button__text {
+  font-size: 25px;
+  min-width: 75px;
+}
+
+.AlarmControl__set-button__bell {
+  width: 45px;
+}
+
+.AlarmMessage {
+  align-items: center;
+  background-color: #d50000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100vh;
+  justify-content: space-evenly;
+}
+
+.AlarmMessage__header {
+  font-size: 67px;
+}
+
+.AlarmMessage__notice {
+  font-size: 45px;
+}
+
+.alarm-set {
+  color: #28a228;
+}
+
+.alarm-no-set {
+  color: #d50000;
+}
+
+.AlarmMessage__audio__credits > a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.AlarmMessage__audio__credits > a:hover,
+.AlarmMessage__audio__credits > a:focus {
+  font-size: 18;
 }
